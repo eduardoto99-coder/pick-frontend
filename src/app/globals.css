@@ -1,0 +1,20 @@
+:root {
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f5f2eb;
+  color: #0b2333;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
