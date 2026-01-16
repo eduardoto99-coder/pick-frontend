@@ -57,3 +57,4 @@ The `Frontend CI/CD` GitHub Actions workflow runs on pushes and pull requests ta
 
 - `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`
 - `AMPLIFY_APP_ID`, `AMPLIFY_BRANCH_NAME` (typically `main`)
+- `NEXT_PUBLIC_API_URL` (production API base URL, e.g. `https://.../prod`)

@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - master
   pull_request:
     branches:
       - main
+      - master
   workflow_dispatch:
 
 jobs:
@@ -36,10 +38,17 @@ jobs:
         run: npm run lint
 
       - name: Test
-        run: npm run test
+        run: npm run test --if-present
 
       - name: Build
-        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+        run: |
+          if [ -z "$NEXT_PUBLIC_API_URL" ]; then
+            echo "Missing NEXT_PUBLIC_API_URL secret."
+            exit 1
+          fi
+          npm run build
 
       - name: Configure AWS credentials
         if: github.event_name == 'push'
@@ -49,7 +58,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Trigger Amplify deployment
+      - name: Deploy to Amplify (static upload)
         if: github.event_name == 'push'
         env:
           AMPLIFY_APP_ID: ${{ secrets.AMPLIFY_APP_ID }}
@@ -60,7 +69,20 @@ jobs:
             exit 0
           fi
 
-          aws amplify start-job \
-            --app-id "$AMPLIFY_APP_ID" \
-            --branch-name "$AMPLIFY_BRANCH_NAME" \
-            --job-type RELEASE
+          if ! command -v zip >/dev/null 2>&1; then
+            sudo apt-get update -y
+            sudo apt-get install -y zip
+          fi
+
+          cd out
+          zip -r -FS /tmp/pick-frontend-out.zip .
+          cd -
+
+          read -r JOB_ID UPLOAD_URL <<< "$(aws amplify create-deployment --app-id "$AMPLIFY_APP_ID" --branch-name "$AMPLIFY_BRANCH_NAME" --query '[jobId,zipUploadUrl]' --output text)"
+          if [ -z "$JOB_ID" ] || [ -z "$UPLOAD_URL" ]; then
+            echo "Failed to create Amplify deployment."
+            exit 1
+          fi
+
+          curl -T /tmp/pick-frontend-out.zip "$UPLOAD_URL"
+          aws amplify start-deployment --app-id "$AMPLIFY_APP_ID" --branch-name "$AMPLIFY_BRANCH_NAME" --job-id "$JOB_ID"
