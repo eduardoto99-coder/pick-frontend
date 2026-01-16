@@ -1,3 +1,5 @@
+"use client";
+
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import LightbulbRoundedIcon from "@mui/icons-material/LightbulbRounded";
 import RocketLaunchRoundedIcon from "@mui/icons-material/RocketLaunchRounded";
@@ -11,7 +13,9 @@ import {
   Typography,
 } from "@mui/material";
 import type { HighlightsCopy } from "@/i18n/types";
+import Link from "next/link";
 import type { ReactNode } from "react";
+import { useAccountLinks } from "@/hooks/use-account-links";
 
 const iconMap: Record<number, ReactNode> = {
   0: <LightbulbRoundedIcon color="primary" />,
@@ -21,13 +25,21 @@ const iconMap: Record<number, ReactNode> = {
 
 type HighlightsSectionProps = {
   copy: HighlightsCopy;
+  locale?: string;
 };
 
-export default function HighlightsSection({ copy }: HighlightsSectionProps) {
+export default function HighlightsSection({ copy, locale = "es" }: HighlightsSectionProps) {
+  const { hasSession, profileHref, signInHref } = useAccountLinks(locale);
+  const ctaHref = hasSession ? profileHref : signInHref;
+  const headingId = `${copy.id}-heading`;
+  const descriptionId = `${copy.id}-description`;
+
   return (
     <Box
       component="section"
       id={copy.id}
+      aria-labelledby={headingId}
+      aria-describedby={descriptionId}
       sx={{
         py: { xs: 10, md: 14 },
         backgroundColor: "#FFFFFF",
@@ -36,8 +48,10 @@ export default function HighlightsSection({ copy }: HighlightsSectionProps) {
       <Container>
         <Stack spacing={{ xs: 5, md: 6 }}>
           <Stack spacing={2} maxWidth={{ md: 600 }}>
-            <Typography variant="h2">{copy.title}</Typography>
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant="h2" id={headingId}>
+              {copy.title}
+            </Typography>
+            <Typography variant="body1" color="text.secondary" id={descriptionId}>
               {copy.description}
             </Typography>
           </Stack>
@@ -71,8 +85,8 @@ export default function HighlightsSection({ copy }: HighlightsSectionProps) {
             ))}
           </Stack>
           <Button
-            component="a"
-            href={copy.closingCta.href}
+            component={Link}
+            href={ctaHref}
             variant="contained"
             color="primary"
             size="large"

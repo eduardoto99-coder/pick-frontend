@@ -5,8 +5,9 @@ import JourneySection from "@/sections/landing/JourneySection";
 import SocialProofSection from "@/sections/landing/SocialProofSection";
 import HighlightsSection from "@/sections/landing/HighlightsSection";
 import LandingHeader from "@/components/navigation/LandingHeader";
+import LandingFooter from "@/components/navigation/LandingFooter";
 import { getDictionary } from "@/i18n/get-dictionary";
-import { locales } from "@/i18n/config";
+import { defaultLocale } from "@/i18n/config";
 
 type PageParams = {
   params: {
@@ -14,14 +15,8 @@ type PageParams = {
   };
 };
 
-export async function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
-}
-
-export const dynamicParams = false;
-
-export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
-  const dictionary = await getDictionary(params.locale);
+export async function generateMetadata(): Promise<Metadata> {
+  const dictionary = await getDictionary(defaultLocale);
 
   return {
     title: dictionary.hero.title,
@@ -30,15 +25,20 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
 }
 
 export default async function LandingPage({ params }: PageParams) {
-  const dictionary = await getDictionary(params.locale);
+  // TODO: re-enable locale-based rendering (e.g., "en") when English copy is ready
+  const locale = defaultLocale;
+  const dictionary = await getDictionary(locale);
 
   return (
-    <Box component="main">
-      <LandingHeader />
-      <HeroSection copy={dictionary.hero} />
-      <JourneySection copy={dictionary.journey} />
-      <SocialProofSection copy={dictionary.socialProof} />
-      <HighlightsSection copy={dictionary.highlights} />
-    </Box>
+    <>
+      <LandingHeader locale={locale} />
+      <Box component="main" id="main-content">
+        <HeroSection copy={dictionary.hero} locale={locale} />
+        <JourneySection copy={dictionary.journey} />
+        <SocialProofSection copy={dictionary.socialProof} />
+        <HighlightsSection copy={dictionary.highlights} locale={locale} />
+      </Box>
+      <LandingFooter locale={locale} />
+    </>
   );
 }

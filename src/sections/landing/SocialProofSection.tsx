@@ -14,10 +14,15 @@ type SocialProofSectionProps = {
 };
 
 export default function SocialProofSection({ copy }: SocialProofSectionProps) {
+  const headingId = `${copy.id}-heading`;
+  const descriptionId = `${copy.id}-description`;
+
   return (
     <Box
       component="section"
       id={copy.id}
+      aria-labelledby={headingId}
+      aria-describedby={descriptionId}
       sx={{
         py: { xs: 10, md: 14 },
         backgroundColor: "#F5F2EB",
@@ -26,8 +31,10 @@ export default function SocialProofSection({ copy }: SocialProofSectionProps) {
       <Container>
         <Stack spacing={{ xs: 5, md: 6 }}>
           <Stack spacing={2} maxWidth={{ md: 620 }}>
-            <Typography variant="h2">{copy.title}</Typography>
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant="h2" id={headingId}>
+              {copy.title}
+            </Typography>
+            <Typography variant="body1" color="text.secondary" id={descriptionId}>
               {copy.subtitle}
             </Typography>
           </Stack>
@@ -63,6 +70,11 @@ export default function SocialProofSection({ copy }: SocialProofSectionProps) {
               </Card>
             ))}
           </Stack>
+          {copy.disclaimer && (
+            <Typography variant="caption" color="text.secondary">
+              {copy.disclaimer}
+            </Typography>
+          )}
         </Stack>
       </Container>
     </Box>

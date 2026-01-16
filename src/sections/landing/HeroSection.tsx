@@ -1,3 +1,6 @@
+"use client";
+
+import Link from "next/link";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import {
@@ -10,17 +13,28 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import type { HeroCopy } from "@/i18n/types";
+import { defaultLocale, isLocale } from "@/i18n/config";
+import { useAccountLinks } from "@/hooks/use-account-links";
+import type { HeroCopy, Locale } from "@/i18n/types";
 
 type HeroSectionProps = {
   copy: HeroCopy;
+  locale?: string;
 };
 
-export default function HeroSection({ copy }: HeroSectionProps) {
+export default function HeroSection({ copy, locale }: HeroSectionProps) {
+  const headingId = `${copy.id}-heading`;
+  const descriptionId = `${copy.id}-description`;
+  const resolvedLocale = isLocale(locale) ? (locale as Locale) : defaultLocale;
+  const { ready, accountHref, signInHref } = useAccountLinks(resolvedLocale);
+  const primaryHref = ready ? accountHref : signInHref;
+
   return (
     <Box
       component="section"
       id={copy.id}
+      aria-labelledby={headingId}
+      aria-describedby={descriptionId}
       sx={{
         position: "relative",
         overflow: "hidden",
@@ -49,8 +63,10 @@ export default function HeroSection({ copy }: HeroSectionProps) {
           <Box flex={{ xs: 1, md: 1 }} maxWidth={{ md: 540 }}>
             <Stack spacing={3}>
               <Stack spacing={1.5}>
-                <Typography variant="h1">{copy.title}</Typography>
-                <Typography variant="body1" color="text.secondary">
+                <Typography variant="h1" id={headingId}>
+                  {copy.title}
+                </Typography>
+                <Typography variant="body1" color="text.secondary" id={descriptionId}>
                   {copy.description}
                 </Typography>
               </Stack>
@@ -59,13 +75,7 @@ export default function HeroSection({ copy }: HeroSectionProps) {
                 spacing={2}
                 alignItems={{ xs: "stretch", sm: "center" }}
               >
-                <Button
-                  component="a"
-                  href={copy.primaryCta.href}
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                >
+                <Button component={Link} href={primaryHref} variant="contained" color="primary" size="large">
                   {copy.primaryCta.label}
                 </Button>
                 <Button
@@ -119,6 +129,24 @@ export default function HeroSection({ copy }: HeroSectionProps) {
                         </Typography>
                       </Stack>
                     ))}
+                  </Stack>
+                  <Stack spacing={1.5}>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      {copy.messagePreviewLabel}
+                    </Typography>
+                    <Box
+                      sx={{
+                        borderRadius: 2,
+                        backgroundColor: "rgba(21, 148, 154, 0.08)",
+                        border: "1px solid rgba(21, 148, 154, 0.16)",
+                        px: 2.5,
+                        py: 2,
+                      }}
+                    >
+                      <Typography variant="body2" color="text.primary">
+                        {copy.messagePreview}
+                      </Typography>
+                    </Box>
                   </Stack>
                 </Stack>
               </CardContent>

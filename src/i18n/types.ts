@@ -15,6 +15,8 @@ export type HeroCopy = {
   differentiators: string[];
   cardTitle: string;
   cardPoints: string[];
+  messagePreviewLabel: string;
+  messagePreview: string;
 };
 
 export type JourneyCopy = {
@@ -31,6 +33,7 @@ export type SocialProofCopy = {
   id: string;
   title: string;
   subtitle: string;
+  disclaimer?: string;
   stories: Array<{
     quote: string;
     name: string;

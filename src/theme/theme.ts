@@ -1,11 +1,11 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 
 const baseFontStack =
   'var(--font-inter), "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif';
 const headingFontStack =
   'var(--font-sora), "Sora", "Inter", "Segoe UI", "Helvetica Neue", Arial, sans-serif';
 
-const theme = createTheme({
+const baseTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
@@ -133,5 +133,7 @@ const theme = createTheme({
     },
   },
 });
+
+const theme = responsiveFontSizes(baseTheme);
 
 export default theme;

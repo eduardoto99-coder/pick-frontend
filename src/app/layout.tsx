@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Sora } from "next/font/google";
+import { defaultLocale } from "@/i18n/config";
 import ThemeRegistry from "@/theme/ThemeRegistry";
 import "./globals.css";
 
@@ -27,36 +28,41 @@ export const metadata: Metadata = {
   alternates: {
     languages: {
       es: "/es",
-      en: "/en",
+      // en: "/en", // TODO: publish English once ready
     },
   },
   openGraph: {
-    title: "Pick | One-to-one intros that build lasting circles",
+    title: "Pick | Introducciones uno a uno que construyen círculos duraderos",
     description:
-      "Interest-first matching, AI-crafted WhatsApp intros, and trusted follow-ups designed for meaningful one-to-one relationships.",
+      "Matching por intereses, intros por WhatsApp y seguimiento seguro diseñados para conexiones uno a uno con intención.",
     type: "website",
+  },
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
   },
   twitter: {
     card: "summary_large_image",
     title: "Pick | One-to-one intros that build lasting circles",
     description:
-      "Interest-first matching, AI-crafted WhatsApp intros, and trusted follow-ups designed for meaningful one-to-one relationships.",
+      "Interest-first matching, WhatsApp intros crafted with artificial intelligence, and trusted follow-ups designed for meaningful one-to-one relationships.",
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
-  params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{ locale?: string }>;
 }>) {
-  const { locale } = await params;
-  const lang = locale ?? "es";
+  const lang = defaultLocale;
+  const skipLabel = "Saltar al contenido principal";
 
   return (
     <html lang={lang}>
       <body className={`${sora.variable} ${inter.variable}`}>
+        <a href="#main-content" className="skip-link">
+          {skipLabel}
+        </a>
         <ThemeRegistry>{children}</ThemeRegistry>
       </body>
     </html>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Pick icon">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5F2EB"/>
+      <stop offset="100%" stop-color="#E9E1CF"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="48" fill="url(#bg)"/>
+  <path
+    fill="#15949A"
+    d="M92 52h56c34.5 0 62 23.5 62 56s-27.5 56-62 56h-24v40c0 11-9 20-20 20H92V52Zm32 32v48h24c15.5 0 28-10.7 28-24s-12.5-24-28-24H124Z"
+  />
+</svg>

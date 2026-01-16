@@ -1,6 +1,9 @@
 import type { Locale } from "./types";
 
-export const locales: readonly Locale[] = ["es", "en"];
+export const locales: readonly Locale[] = [
+  "es",
+  // "en", // TODO: re-enable English once the copy is ready
+];
 
 export const defaultLocale: Locale = "es";
 

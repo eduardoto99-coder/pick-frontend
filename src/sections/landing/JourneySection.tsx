@@ -15,10 +15,15 @@ type JourneySectionProps = {
 };
 
 export default function JourneySection({ copy }: JourneySectionProps) {
+  const headingId = `${copy.id}-heading`;
+  const descriptionId = `${copy.id}-description`;
+
   return (
     <Box
       component="section"
       id={copy.id}
+      aria-labelledby={headingId}
+      aria-describedby={descriptionId}
       sx={{
         py: { xs: 10, md: 14 },
         backgroundColor: "#FFFFFF",
@@ -27,8 +32,10 @@ export default function JourneySection({ copy }: JourneySectionProps) {
       <Container>
         <Stack spacing={6}>
           <Stack spacing={2} maxWidth={{ md: 640 }}>
-            <Typography variant="h2">{copy.title}</Typography>
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant="h2" id={headingId}>
+              {copy.title}
+            </Typography>
+            <Typography variant="body1" color="text.secondary" id={descriptionId}>
               {copy.description}
             </Typography>
           </Stack>

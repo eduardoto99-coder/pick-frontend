@@ -3,9 +3,9 @@ import type { LandingDictionary } from "../types";
 const en: LandingDictionary = {
   hero: {
     id: "home",
-    title: "Find your partner-in-crime for every plan, from rooftop parties to hackathons.",
+    title: "Pick writes your WhatsApp intro and pairs you with someone on your wavelength.",
     description:
-      "Pick’s AI understands what you’re in the mood for—night out, foodie tour, cowork sprint—and introduces you to someone who wants the same. Get a ready-to-send WhatsApp message so you can confirm plans instantly.",
+      "Share the plan and city. Pick matches you, writes the intro in your tone, and opens WhatsApp ready to send so you can confirm fast.",
     primaryCta: {
       label: "Start your plan",
       href: "/app",
@@ -15,37 +15,37 @@ const en: LandingDictionary = {
       href: "#journey",
     },
     differentiators: [
-      "AI-powered matching tuned to your vibe and availability",
-      "Activity-ready intros in any city you land in",
-      "Suggested venues, prompts, and reminders so the plan actually happens",
+      "AI-generated intro ready in WhatsApp",
+      "Matches ready to move in any city",
+      "Crossed interests and timing so you decide fast",
     ],
-    cardTitle: "How Pick supports every hangout",
+    cardTitle: "How Pick gets you talking",
     cardPoints: [
-      "Tell us the plan (after-party in Berlin, rooftop in New York, sunrise hike in Cape Town) and when you’re free.",
-      "Our AI builds the perfect icebreaker with venue ideas, playlists, and a clear first step.",
-      "Lock the plan in minutes, share how it went, and unlock fresh matches whenever you’re ready.",
+      "Describe the plan and city; add vibe and time.",
+      "Pick selects the right person and drafts the automatic intro in your voice.",
+      "Open WhatsApp, hit send, and lock place and time in minutes.",
     ],
+    messagePreviewLabel: "Preview of the automatic message",
+    messagePreview:
+      "Hey Ana, it’s Alex. Down for the rooftop in Roma Norte this Friday 8pm? I’ll book a table and share the playlist—if it works I’ll send the pin.",
   },
   journey: {
     id: "journey",
-    title: "Three steps from “who’s in?” to “see you at 8pm”.",
-    description:
-      "Each stage helps you define the plan, get the right plus-one, and make it happen without friction.",
+    title: "Three steps from “who’s in?” to “chat is open”.",
+    description: "Built to define the plan, match, and chat fast.",
     steps: [
       {
         title: "1. Share the plan",
-        description:
-          "Pick the activity and city—party, networking, live show, coffee crawl—and add your availability.",
+        description: "Pick the city and activity—party, sports, networking, exploring.",
       },
       {
-        title: "2. Let AI curate your match",
+        title: "2. Pick writes and opens the intro in WhatsApp",
         description:
-          "Pick analyses your mood, pace, and interests to connect you with someone who wants the same thing and drafts the intro.",
+          "AI aligns interests and timing, selects the match, and drops the automatic intro ready to send.",
       },
       {
-        title: "3. Lock it in and enjoy",
-        description:
-          "Confirm the spot, get gentle nudges so no one ghosts, and share feedback to keep new adventures coming.",
+        title: "3. Confirm and go",
+        description: "Agree on spot and time in the chat, then share feedback for the next plan.",
       },
     ],
   },
@@ -54,6 +54,7 @@ const en: LandingDictionary = {
     title: "Real people turning introductions into long-lasting support.",
     subtitle:
       "Hybrid professionals, creatives, and community hosts rely on Pick to find partners with genuine intent.",
+    disclaimer: "Representative stories; names and details are modified.",
     stories: [
       {
         quote:
@@ -63,9 +64,9 @@ const en: LandingDictionary = {
       },
       {
         quote:
-          "Met Sam through Pick while both scouting co-founders. We’re now building a logistics AI startup between Madrid and São Paulo.",
+          "Met Sam through Pick while both scouting co-founders. We’re now building a logistics artificial intelligence startup between Madrid and São Paulo.",
         name: "Camila · CTO in the making",
-        role: "Madrid · São Paulo",
+        role: "Madrid",
       },
       {
         quote:
@@ -77,24 +78,23 @@ const en: LandingDictionary = {
   },
   highlights: {
     id: "highlights",
-    title: "Why Pick is the activity-first companion you’ve been missing.",
-    description:
-      "We blend thoughtful AI with human touch so you can focus on the experience, not the logistics.",
+    title: "Why Pick speeds up one-to-one plans.",
+    description: "AI plus human touch so you get a ready-to-send WhatsApp intro.",
     items: [
       {
         title: "Activity-led planning",
         description:
-          "Select the vibe and city; we coordinate timing, energy, and interests to surface the ideal partner.",
+          "Select the vibe and city; we coordinate timing and interests to surface the right partner.",
       },
       {
-        title: "AI that sparks conversation",
+        title: "Artificial intelligence that sparks conversation",
         description:
-          "Intros arrive with shared touchpoints, venue ideas, and curated prompts so no one is stuck saying 'hey'.",
+          "Intros arrive with context and a clear first move—already ready to drop into WhatsApp—so no one is stuck saying 'hey'.",
       },
       {
         title: "Momentum that keeps rolling",
         description:
-          "Feedback unlocks new suggestions, helping you build a calendar full of unforgettable one-to-one experiences.",
+          "Feedback unlocks new suggestions and gentle reminders so the plan actually happens.",
       },
     ],
     closingCta: {

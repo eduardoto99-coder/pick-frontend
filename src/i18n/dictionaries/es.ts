@@ -3,11 +3,10 @@ import type { LandingDictionary } from "../types";
 const es: LandingDictionary = {
   hero: {
     id: "inicio",
-    title: "Encuentra con quién vivir cada plan, en tu ciudad o la que visitas.",
-    description:
-      "Pick usa IA para entender qué quieres hacer (salir de fiesta, coworkear, explorar) y te conecta con la persona que vibra igual. Recibe un mensaje listo en WhatsApp para confirmar el plan sin awkwardness.",
+    title: "Pick escribe tu intro y te conecta con quien vibra igual para ese plan.",
+    description: "",
     primaryCta: {
-      label: "Empieza tu plan",
+      label: "Empieza con Pick",
       href: "/app",
     },
     secondaryCta: {
@@ -15,37 +14,37 @@ const es: LandingDictionary = {
       href: "#journey",
     },
     differentiators: [
-      "Algoritmo con IA que mapea tu mood y energía",
-      "Matches preparados para tu próximo plan, en cualquier ciudad",
-      "Ideas de actividades y recordatorios para que nadie se quede colgado",
+      "Mensaje inicial generado por IA, listo para enviar",
+      "Matches activos en la ciudad que visites, sin suscripción",
+      "Cruce de intereses y horarios para moverse rápido",
     ],
-    cardTitle: "Así te acompañamos en cada encuentro",
+    cardTitle: "Cómo te llevamos al encuentro",
     cardPoints: [
-      "Describe qué plan quieres (after en Ciudad de México, bar en París, cowork en Lisboa) y cuándo puedes.",
-      "Nuestra IA propone icebreakers, playlists y first moves para que el chat fluya de inmediato.",
-      "Confirma el plan, comparte cómo salió y desbloquea nuevas combinaciones cuando tengas otro antojo.",
+      "Describe el plan y la ciudad; afina mood, zona y fecha.",
+      "Pick encuentra a quien busca lo mismo y redacta el intro automático en tu voz.",
+      "Abres el chat, envías y cierran lugar y hora en minutos.",
     ],
+    messagePreviewLabel: "Así llega el mensaje automático",
+    messagePreview:
+      "Hey Ana, soy Edu. ¿Nos vemos en el rooftop de Laureles el viernes 8pm? Reservo mesa y llevo playlist; si te sirve te mando la ubicación.",
   },
   journey: {
     id: "journey",
-    title: 'Tres pasos para pasar de "¿con quién?" a "nos vemos a las 8".',
-    description:
-      "Diseñamos cada etapa para que definas tu plan, recibas la mejor dupla y lo vivan sin fricción.",
+    title: 'Tres pasos de "¿con quién?" a "ya está el chat".',
+    description: "Diseñado para definir el plan, conectar y chatear sin fricción.",
     steps: [
       {
-        title: "1. Cuéntanos el plan",
-        description:
-          "Elige si buscas fiesta, deportes, networking tech o compañía para explorar una ciudad nueva.",
+        title: "1. Di el plan",
+        description: "Selecciona ciudad y actividad (fiesta, deportes, networking, exploración).",
       },
       {
-        title: "2. Deja que la IA haga la magia",
+        title: "2. Pick escribe y abre el intro",
         description:
-          "Pick analiza tus gustos, horarios y vibra social para conectarte con la persona perfecta y envía el mensaje introductorio.",
+          "La IA cruza intereses y horarios, elige el match y deja el mensaje automático listo para enviar.",
       },
       {
         title: "3. Vivan el plan y cuéntanos",
-        description:
-          "Confirma el lugar, recibe recordatorios amigables y comparte cómo estuvo para seguir recibiendo planes épicos.",
+        description: "Cierren lugar y hora en el chat y comparte feedback para el próximo plan.",
       },
     ],
   },
@@ -54,6 +53,7 @@ const es: LandingDictionary = {
     title: "Personas reales creando colaboraciones y amistades duraderas.",
     subtitle:
       "Profesionales híbridos, creativos y anfitriones locales usan Pick para encontrar aliados con intención.",
+    disclaimer: "Historias representativas; nombres y detalles modificados.",
     stories: [
       {
         quote:
@@ -63,9 +63,9 @@ const es: LandingDictionary = {
       },
       {
         quote:
-          "Conocí a Sam a través de Pick; ambos queríamos lanzar un producto de IA para logística y ahora dirigimos una startup entre Madrid y São Paulo.",
+          "Conocí a Sam a través de Pick; ambos queríamos lanzar un producto de inteligencia artificial para logística y ahora dirigimos una startup entre Madrid y São Paulo.",
         name: "Camila · CTO en formación",
-        role: "Madrid · São Paulo",
+        role: "Madrid",
       },
       {
         quote:
@@ -77,24 +77,23 @@ const es: LandingDictionary = {
   },
   highlights: {
     id: "destacados",
-    title: "Por qué Pick es tu co-piloto ideal de planes uno a uno.",
-    description:
-      "Combinamos IA con cuidado humano para que solo te preocupes por disfrutar.",
+    title: "Por qué Pick acelera tus planes uno a uno.",
+    description: "IA + cuidado humano para conectar y dejarte un intro listo para enviar.",
     items: [
       {
         title: "Planificación centrada en actividades",
         description:
-          "Selecciona el plan y la ciudad; nosotros cruzamos disponibilidad y afinidad para sugerirte el partner ideal.",
+          "Elige la vibra y la ciudad; coordinamos timing y afinidad para sugerirte la dupla ideal.",
       },
       {
-        title: "IA que desbloquea conversaciones",
+        title: "Inteligencia artificial que desbloquea conversaciones",
         description:
-          "Recibe mensajes con contexto, playlists y preguntas rompehielo personalizadas según el plan.",
+          "Recibe intros con contexto y primer movimiento, ya listos para enviar.",
       },
       {
         title: "Momentum continuo",
         description:
-          "Tus comentarios activan nuevas sugerencias y te ayudan a mantener una agenda llena de experiencias memorables.",
+          "Tus comentarios reactivan nuevas sugerencias y recordatorios suaves para que el plan suceda.",
       },
     ],
     closingCta: {
