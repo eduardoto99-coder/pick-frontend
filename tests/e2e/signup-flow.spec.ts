@@ -101,7 +101,7 @@ async function seedCandidateProfile() {
     cognitoId: candidateId,
     profile: {
       displayName: candidateName,
-      bio: "Perfil de prueba para generar matches en el flujo E2E.",
+      bio: "Perfil de prueba para generar matches en el flujo E2E y validar sugerencias reales.",
       existingPhotoUrl: "https://example.com/pick-e2e.png",
       linkedinUrl: "https://www.linkedin.com/in/pick-e2e",
       instagramUrl: "https://instagram.com/pick-e2e",
@@ -238,5 +238,7 @@ test("signup flow ends with a match suggestion", async ({ page }) => {
   await expect(page.getByText(/Perfil guardado/i)).toBeVisible();
 
   await page.goto("/es/matches");
-  await expect(page.getByText(candidateName)).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByRole("heading", { name: candidateName })).toBeVisible({
+    timeout: 30_000,
+  });
 });
