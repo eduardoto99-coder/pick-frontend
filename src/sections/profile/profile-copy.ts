@@ -40,6 +40,7 @@ export type ProfileCopy = {
   interests: {
     title: string;
     helper: string;
+    pendingNotice: string;
   };
   locations: {
     title: string;
@@ -116,6 +117,8 @@ const copy: Record<Locale, ProfileCopy> = {
   interests: {
     title: "Intereses",
     helper: "",
+    pendingNotice:
+      "Este interés es personalizado y está en revisión. Lo aprobaremos en menos de 24 horas para hacer match con personas.",
   },
   locations: {
     title: "Ciudades",
@@ -191,9 +194,11 @@ const copy: Record<Locale, ProfileCopy> = {
     uploadLabel: "Upload photo",
     removeLabel: "Remove photo",
   },
-    interests: {
-      title: "Interests",
-      helper: "",
+  interests: {
+    title: "Interests",
+    helper: "",
+    pendingNotice:
+      "This custom interest is under review. It will be approved within 24 hours so you can match with people.",
   },
   locations: {
     title: "Cities",

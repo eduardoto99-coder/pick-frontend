@@ -127,6 +127,7 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
   const [interestInput, setInterestInput] = useState("");
   const [interestStatus, setInterestStatus] = useState<"idle" | "loading" | "error">("idle");
   const [interestError, setInterestError] = useState<string>();
+  const [pendingInterestIds, setPendingInterestIds] = useState<string[]>([]);
   const [matchRecommendations, setMatchRecommendations] = useState<MatchRecommendation[]>([]);
   const [matchesStatus, setMatchesStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [matchesError, setMatchesError] = useState<string>();
@@ -138,6 +139,7 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
   const reportDialogOpen = Boolean(reportTarget);
   const filterInterestOptions = createFilterOptions<InterestOption>();
   const hasSubtitle = Boolean(subtitleText);
+  const hasPendingInterests = pendingInterestIds.some((id) => draft.interests.includes(id));
 
   useEffect(() => {
     if (!sessionReady) return;
@@ -333,6 +335,11 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
         id: result.interestId,
         label: result.label,
       };
+      if (result.created) {
+        setPendingInterestIds((prev) =>
+          prev.includes(option.id) ? prev : [...prev, option.id],
+        );
+      }
       mergeInterestOptions([option, ...interestOptions]);
       addInterestByOption(option);
       setInterestStatus("idle");
@@ -529,11 +536,19 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
                     onDelete={() => {
                       markProfileDirty();
                       toggleInterest(id);
+                      setPendingInterestIds((prev) =>
+                        prev.filter((pendingId) => pendingId !== id),
+                      );
                     }}
                   />
                 );
               })}
             </Stack>
+            {hasPendingInterests && (
+              <Typography variant="caption" color="text.secondary">
+                {copy.interests.pendingNotice}
+              </Typography>
+            )}
             {interestStatus === "error" && interestError && (
               <Alert severity="warning">{interestError}</Alert>
             )}
