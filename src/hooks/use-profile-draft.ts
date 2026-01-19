@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { DEFAULT_PROFILE_DRAFT, CITY_SELECTION_LIMIT } from "@/constants/profile";
 import { defaultLocale, isLocale } from "@/i18n/config";
 import { fetchProfile, persistProfile } from "@/services/profile-service";
+import { getStoredDisplayName } from "@/utils/local-user";
 import {
   validateProfileDraft,
   toggleInterestSelection,
@@ -46,7 +47,13 @@ function fileToDataUrl(file: File, errorMessage: string): Promise<string> {
 export function useProfileDraft(locale?: string) {
   const resolvedLocale = isLocale(locale) ? (locale as Locale) : defaultLocale;
   const messages = useMemo(() => draftMessages[resolvedLocale], [resolvedLocale]);
-  const [draft, setDraft] = useState<ProfileDraft>(DEFAULT_PROFILE_DRAFT);
+  const [draft, setDraft] = useState<ProfileDraft>(() => {
+    if (typeof window === "undefined") {
+      return DEFAULT_PROFILE_DRAFT;
+    }
+    const storedName = getStoredDisplayName();
+    return storedName ? { ...DEFAULT_PROFILE_DRAFT, displayName: storedName } : DEFAULT_PROFILE_DRAFT;
+  });
   const [status, setStatus] = useState<ProfileStatus>("idle");
   const [submitError, setSubmitError] = useState<string>();
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);

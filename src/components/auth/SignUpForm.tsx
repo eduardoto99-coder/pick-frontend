@@ -110,7 +110,11 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
       if (typeof window !== "undefined") {
         window.sessionStorage.setItem(
           PENDING_SIGNUP_KEY,
-          JSON.stringify({ email: payload.email, password: payload.password }),
+          JSON.stringify({
+            email: payload.email,
+            password: payload.password,
+            displayName: payload.displayName,
+          }),
         );
       }
       const confirmHref = `/${locale}/auth/confirm?email=${encodeURIComponent(payload.email)}`;

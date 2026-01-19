@@ -5,6 +5,7 @@ import { Alert, Button, Stack, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { confirmSignUp, loginUser } from "@/services/auth-service";
 import { useAccountLinks } from "@/hooks/use-account-links";
+import { persistStoredDisplayName } from "@/utils/local-user";
 
 type FormState = {
   code: string;
@@ -21,6 +22,7 @@ const PENDING_SIGNUP_KEY = "pick:pending-signup";
 type PendingSignup = {
   email?: string;
   password?: string;
+  displayName?: string;
 };
 
 function readPendingSignup(): PendingSignup {
@@ -47,6 +49,7 @@ export default function ConfirmSignUpForm({ locale = "es" }: { locale?: string }
   const [isSubmitting, setSubmitting] = useState(false);
   const [email, setEmail] = useState("");
   const [pendingPassword, setPendingPassword] = useState<string | null>(null);
+  const [pendingDisplayName, setPendingDisplayName] = useState<string | null>(null);
   const { persistSession } = useAccountLinks(locale);
   const router = useRouter();
 
@@ -61,6 +64,8 @@ export default function ConfirmSignUpForm({ locale = "es" }: { locale?: string }
       typeof pending.email === "string" ? pending.email.trim().toLowerCase() : "";
     const storedPassword =
       typeof pending.password === "string" ? pending.password : null;
+    const storedDisplayName =
+      typeof pending.displayName === "string" ? pending.displayName.trim() : "";
 
     const resolvedEmail = emailFromQuery || storedEmail;
     if (resolvedEmail) {
@@ -68,6 +73,9 @@ export default function ConfirmSignUpForm({ locale = "es" }: { locale?: string }
     }
     if (storedPassword) {
       setPendingPassword(storedPassword);
+    }
+    if (storedDisplayName) {
+      setPendingDisplayName(storedDisplayName);
     }
   }, []);
 
@@ -110,6 +118,10 @@ export default function ConfirmSignUpForm({ locale = "es" }: { locale?: string }
         email: normalizedEmail,
         code: form.code.trim().replace(/\s/g, ""),
       });
+
+      if (pendingDisplayName) {
+        persistStoredDisplayName(pendingDisplayName);
+      }
 
       if (pendingPassword) {
         try {
