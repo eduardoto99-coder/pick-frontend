@@ -1,0 +1,316 @@
+import { test, expect, type Page } from "@playwright/test";
+import { execFileSync } from "node:child_process";
+
+const stackName = process.env.E2E_STACK_NAME ?? "pick-backend";
+const runId = Date.now().toString(36);
+const candidateAId = `e2e-candidate-a-${runId}`;
+const candidateBId = `e2e-candidate-b-${runId}`;
+const candidateAName = `Candidata A E2E ${runId}`;
+const candidateBName = `Candidata B E2E ${runId}`;
+
+let apiUrl = "";
+let userPoolId = "";
+let mongoUri = "";
+let interestAId = "";
+let interestALabel = "Product builders";
+let interestBId = "";
+let interestBLabel = "Accountability pods";
+let testEmail = "";
+let testUserId: string | null = null;
+
+function runAws(args: string[]): string {
+  return execFileSync("aws", args, { encoding: "utf8" }).trim();
+}
+
+function resolveApiUrl(): string {
+  if (process.env.E2E_API_URL) {
+    return process.env.E2E_API_URL.replace(/\/$/, "");
+  }
+  const output = runAws([
+    "cloudformation",
+    "describe-stacks",
+    "--stack-name",
+    stackName,
+    "--query",
+    "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue",
+    "--output",
+    "text",
+  ]);
+  if (!output) {
+    throw new Error("No pudimos resolver ApiUrl desde CloudFormation.");
+  }
+  return output.replace(/\/$/, "");
+}
+
+function resolveUserPoolId(): string {
+  if (process.env.E2E_USER_POOL_ID) {
+    return process.env.E2E_USER_POOL_ID;
+  }
+  const output = runAws([
+    "cloudformation",
+    "describe-stacks",
+    "--stack-name",
+    stackName,
+    "--query",
+    "Stacks[0].Parameters[?ParameterKey=='CognitoUserPoolId'].ParameterValue",
+    "--output",
+    "text",
+  ]);
+  if (!output) {
+    throw new Error("No pudimos resolver CognitoUserPoolId desde CloudFormation.");
+  }
+  return output;
+}
+
+function resolveMongoUri(): string {
+  if (process.env.E2E_MONGODB_URI) {
+    return process.env.E2E_MONGODB_URI;
+  }
+  const output = runAws([
+    "cloudformation",
+    "describe-stacks",
+    "--stack-name",
+    stackName,
+    "--query",
+    "Stacks[0].Parameters[?ParameterKey=='MongoDbUri'].ParameterValue",
+    "--output",
+    "text",
+  ]);
+  if (!output) {
+    throw new Error("No pudimos resolver MongoDbUri desde CloudFormation.");
+  }
+  return output;
+}
+
+async function fetchJson(url: string, init?: RequestInit) {
+  const response = await fetch(url, init);
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || `Request failed: ${response.status}`);
+  }
+  return response.json() as Promise<Record<string, unknown>>;
+}
+
+async function resolveInterest(label: string) {
+  const payload = await fetchJson(`${apiUrl}/interests/resolve`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ label }),
+  });
+  return payload as { interestId: string; label: string };
+}
+
+async function seedCandidateProfile(
+  cognitoId: string,
+  displayName: string,
+  cityId: string,
+  interestId: string,
+) {
+  const payload = {
+    cognitoId,
+    profile: {
+      displayName,
+      bio: "Perfil de prueba para validar actualizaciones completas en el flujo E2E.",
+      existingPhotoUrl: "https://example.com/pick-e2e.png",
+      linkedinUrl: "https://www.linkedin.com/in/pick-e2e",
+      instagramUrl: "https://instagram.com/pick-e2e",
+    },
+    cities: [cityId],
+    interests: [interestId],
+  };
+
+  await fetchJson(`${apiUrl}/profiles`, {
+    method: "PUT",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+}
+
+function adminConfirmUser(email: string) {
+  runAws([
+    "cognito-idp",
+    "admin-confirm-sign-up",
+    "--user-pool-id",
+    userPoolId,
+    "--username",
+    email,
+  ]);
+}
+
+function adminDeleteUser(email: string) {
+  runAws([
+    "cognito-idp",
+    "admin-delete-user",
+    "--user-pool-id",
+    userPoolId,
+    "--username",
+    email,
+  ]);
+}
+
+function cleanupMongo() {
+  const cognitoIds = [candidateAId, candidateBId, testUserId].filter(Boolean) as string[];
+  const emails = testEmail ? [testEmail] : [];
+
+  if (!mongoUri || (!cognitoIds.length && !emails.length)) {
+    return;
+  }
+
+  const script = `
+const cognitoIds = ${JSON.stringify(cognitoIds)};
+const emails = ${JSON.stringify(emails)};
+let users = 0;
+let consents = 0;
+if (cognitoIds.length) {
+  users = db.users.deleteMany({ cognitoId: { $in: cognitoIds } }).deletedCount;
+}
+if (emails.length) {
+  consents = db.consents.deleteMany({ email: { $in: emails } }).deletedCount;
+}
+printjson({ users, consents });
+`;
+
+  execFileSync("mongosh", [mongoUri, "--quiet", "--eval", script], {
+    stdio: "inherit",
+  });
+}
+
+function escapeRegex(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+async function removeChipByLabel(page: Page, labelPattern: RegExp) {
+  const chipLabel = page.locator("span.MuiChip-label", { hasText: labelPattern }).first();
+  await expect(chipLabel).toBeVisible();
+  const chipRoot = chipLabel.locator("xpath=ancestor::*[contains(@class,'MuiChip-root')]");
+  const deleteButton = chipRoot.locator("button[aria-label='Delete']");
+  if ((await deleteButton.count()) > 0) {
+    await deleteButton.first().click();
+    return;
+  }
+  await chipRoot.locator("svg").first().click();
+}
+
+test.beforeAll(async () => {
+  apiUrl = resolveApiUrl();
+  userPoolId = resolveUserPoolId();
+  mongoUri = resolveMongoUri();
+
+  const resolvedA = await resolveInterest(interestALabel);
+  interestAId = resolvedA.interestId;
+  interestALabel = resolvedA.label;
+
+  const resolvedB = await resolveInterest(interestBLabel);
+  interestBId = resolvedB.interestId;
+  interestBLabel = resolvedB.label;
+
+  await seedCandidateProfile(candidateAId, candidateAName, "cartagena", interestAId);
+  await seedCandidateProfile(candidateBId, candidateBName, "cali", interestBId);
+});
+
+test.afterAll(() => {
+  if (testEmail && userPoolId) {
+    adminDeleteUser(testEmail);
+  }
+  cleanupMongo();
+});
+
+test("profile update refreshes photo and matches", async ({ page }) => {
+  testEmail = `pick.e2e.profile.${runId}@example.com`;
+  const password = "PickE2E123!";
+  const displayName = `E2E Profile ${runId}`;
+  const bioText = "Estoy probando Pick con cambios completos en mi perfil inicial.";
+  const updatedBio = "Actualice todo mi perfil para validar que los matches se ajusten.";
+
+  await page.goto("/es/auth/sign-up");
+  await page.getByLabel(/nombre/i).fill(displayName);
+  await page.getByLabel(/correo/i).fill(testEmail);
+  await page.getByLabel(/contrase/i).fill(password);
+  await page.getByRole("checkbox").check();
+  await page.getByRole("button", { name: /crear cuenta/i }).click();
+
+  await page.waitForURL(/\/auth\/confirm/);
+  adminConfirmUser(testEmail);
+
+  await page.getByLabel(/confirm/i).fill("000000");
+  await page.getByRole("button", { name: /confirmar cuenta/i }).click();
+
+  await page.waitForURL(/\/profile/);
+  testUserId = await page.evaluate(() => window.localStorage.getItem("pick:userId"));
+
+  await page.getByLabel(/^Bio$/i).fill(bioText);
+  await page.getByLabel(/LinkedIn/i).fill("https://www.linkedin.com/in/e2e-profile");
+  await page.getByLabel(/Instagram/i).fill("https://instagram.com/e2e.profile");
+
+  const photoBuffer = Buffer.from(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==",
+    "base64",
+  );
+  await page.locator("input[type=\"file\"]").first().setInputFiles({
+    name: "e2e-initial.png",
+    mimeType: "image/png",
+    buffer: photoBuffer,
+  });
+
+  const interestInput = page.getByLabel(/Buscar intereses/i);
+  await interestInput.fill(interestALabel);
+  await page.getByRole("option", { name: new RegExp(escapeRegex(interestALabel), "i") }).click();
+
+  const cityInput = page.getByLabel(/Ciudades/i);
+  await cityInput.fill("Cartagena");
+  await page.getByRole("option", { name: /Cartagena/i }).click();
+
+  await page.getByRole("button", { name: /guardar perfil/i }).click();
+  await expect(page.getByText(/Perfil guardado/i)).toBeVisible();
+
+  await page.reload();
+  const initialPhoto = page.getByAltText(displayName);
+  await expect(initialPhoto).toBeVisible();
+  const initialPhotoSrc = await initialPhoto.getAttribute("src");
+  expect(initialPhotoSrc).toBeTruthy();
+
+  await page.goto("/es/matches");
+  await expect(page.getByRole("heading", { name: candidateAName })).toBeVisible({
+    timeout: 30_000,
+  });
+  await expect(page.getByRole("heading", { name: candidateBName })).toHaveCount(0);
+
+  await page.goto("/es/profile");
+  await page.getByLabel(/^Bio$/i).fill(updatedBio);
+  await page.getByLabel(/LinkedIn/i).fill("https://www.linkedin.com/in/e2e-profile-updated");
+  await page.getByLabel(/Instagram/i).fill("https://instagram.com/e2e.profile.updated");
+
+  const updatedPhotoBuffer = Buffer.from(
+    "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAF0lEQVR4nGNgYGD4z8DAwMDAwAAAG+0D/qeM0gAAAABJRU5ErkJggg==",
+    "base64",
+  );
+  await page.locator("input[type=\"file\"]").first().setInputFiles({
+    name: "e2e-updated.png",
+    mimeType: "image/png",
+    buffer: updatedPhotoBuffer,
+  });
+
+  await removeChipByLabel(page, new RegExp(escapeRegex(interestALabel), "i"));
+  await interestInput.fill(interestBLabel);
+  await page.getByRole("option", { name: new RegExp(escapeRegex(interestBLabel), "i") }).click();
+
+  await removeChipByLabel(page, /Cartagena/i);
+  await cityInput.fill("Cali");
+  await page.getByRole("option", { name: /Cali/i }).click();
+
+  await page.getByRole("button", { name: /guardar perfil/i }).click();
+  await expect(page.getByText(/Perfil guardado/i)).toBeVisible();
+
+  await page.reload();
+  const updatedPhoto = page.getByAltText(displayName);
+  await expect(updatedPhoto).toBeVisible();
+  const updatedPhotoSrc = await updatedPhoto.getAttribute("src");
+  expect(updatedPhotoSrc).toBeTruthy();
+  expect(updatedPhotoSrc).not.toEqual(initialPhotoSrc);
+
+  await page.goto("/es/matches");
+  await expect(page.getByRole("heading", { name: candidateBName })).toBeVisible({
+    timeout: 30_000,
+  });
+  await expect(page.getByRole("heading", { name: candidateAName })).toHaveCount(0);
+});
