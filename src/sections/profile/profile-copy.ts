@@ -57,6 +57,10 @@ export type ProfileCopy = {
   matches: {
     title: string;
     helper: string;
+    newTitle: string;
+    newEmpty: string;
+    connectedTitle: string;
+    connectedEmpty: string;
     loading: string;
     empty: string;
     error: string;
@@ -135,6 +139,10 @@ const copy: Record<Locale, ProfileCopy> = {
   matches: {
     title: "Sugerencias",
     helper: "",
+    newTitle: "Nuevas sugerencias",
+    newEmpty: "Aún no tienes nuevas sugerencias.",
+    connectedTitle: "Relaciones iniciadas",
+    connectedEmpty: "Aún no has enviado un mensaje por WhatsApp.",
     loading: "Buscando coincidencias compatibles...",
     empty: "Completa tu perfil para desbloquear sugerencias.",
       error: "No pudimos cargar tus coincidencias. Intenta nuevamente.",
@@ -215,6 +223,10 @@ const copy: Record<Locale, ProfileCopy> = {
   matches: {
     title: "Suggestions",
     helper: "",
+    newTitle: "New suggestions",
+    newEmpty: "You have no new suggestions yet.",
+    connectedTitle: "Connections started",
+    connectedEmpty: "You haven’t opened WhatsApp for a suggestion yet.",
     loading: "Curating compatible matches...",
       empty: "Complete your profile to unlock recommendations.",
       error: "We couldn’t load your matches. Try again shortly.",

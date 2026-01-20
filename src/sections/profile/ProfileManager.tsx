@@ -40,6 +40,7 @@ import { useAccountLinks } from "@/hooks/use-account-links";
 import { getProfileCopy } from "@/sections/profile/profile-copy";
 import {
   fetchMatchRecommendations,
+  logWhatsappClick,
   requestMatchIntro,
   type MatchRecommendation,
 } from "@/services/matchmaking-service";
@@ -138,6 +139,14 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
   const filterInterestOptions = createFilterOptions<InterestOption>();
   const hasSubtitle = Boolean(subtitleText);
   const hasPendingInterests = pendingInterestIds.some((id) => draft.interests.includes(id));
+  const contactedMatches = useMemo(
+    () => matchRecommendations.filter((match) => Boolean(match.whatsappIntroAt)),
+    [matchRecommendations],
+  );
+  const newMatches = useMemo(
+    () => matchRecommendations.filter((match) => !match.whatsappIntroAt),
+    [matchRecommendations],
+  );
 
   useEffect(() => {
     if (!sessionReady) return;
@@ -211,6 +220,21 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
       if (typeof window !== "undefined") {
         window.open(intro.whatsappUrl, "_blank", "noopener");
       }
+      logWhatsappClick({
+        partnerId: matchId,
+        matchCode: intro.matchCode,
+        sharedCities: intro.sharedCities,
+        sharedInterests: intro.sharedInterests,
+        sponsor: intro.sponsor,
+        source: "match_intro",
+      }).catch(() => undefined);
+      setMatchRecommendations((prev) =>
+        prev.map((match) =>
+          match.userId === matchId
+            ? { ...match, whatsappIntroAt: new Date().toISOString() }
+            : match,
+        ),
+      );
       setIntroStatus((prev) => ({
         ...prev,
         [matchId]: { status: "idle" },
@@ -645,6 +669,111 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
   };
 
   const getIntroState = (matchId: string) => introStatus[matchId]?.status ?? "idle";
+  const renderMatchCards = (matches: MatchRecommendation[]) => (
+    <Stack spacing={1.25} divider={<Divider flexItem />}>
+      {matches.map((match) => {
+        const state = getIntroState(match.userId);
+        const isLoadingIntro = state === "loading";
+        const matchError =
+          state === "error"
+            ? introStatus[match.userId]?.message || copy.matches.error
+            : undefined;
+        const linkedinHref = buildSocialHref(match.linkedinUrl, "linkedin");
+        const instagramHref = buildSocialHref(match.instagramUrl, "instagram");
+
+        return (
+          <Stack key={match.userId} spacing={1}>
+            <Stack direction="row" alignItems="flex-start" spacing={1.5}>
+              <Avatar
+                src={match.photoUrl}
+                alt={match.displayName}
+                sx={{ width: 56, height: 56, cursor: "pointer" }}
+                onClick={() => {
+                  if (match.photoUrl) {
+                    setEnlargedPhoto({ url: match.photoUrl, name: match.displayName });
+                  }
+                }}
+              >
+                {match.displayName.charAt(0)}
+              </Avatar>
+              <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                <Typography variant="subtitle2">{match.displayName}</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: "normal" }}>
+                  {locale === "en" ? "Cities: " : "Ciudades: "}
+                  {match.sharedCities.join(", ")}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: "normal" }}>
+                  {locale === "en" ? "Interests: " : "Intereses: "}
+                  {match.sharedInterests.map(formatInterestLabel).join(", ")}
+                </Typography>
+                {match.bio ? (
+                  <Typography
+                    variant="body2"
+                    color="text.primary"
+                    sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
+                  >
+                    {match.bio}
+                  </Typography>
+                ) : null}
+                {match.linkedinUrl || match.instagramUrl ? (
+                  <Stack spacing={0.5} sx={{ mt: 0.5 }}>
+                    {match.linkedinUrl ? (
+                      <Typography variant="body2" color="text.secondary">
+                        LinkedIn:{" "}
+                        {linkedinHref ? (
+                          <Link href={linkedinHref} target="_blank" rel="noopener">
+                            {match.linkedinUrl}
+                          </Link>
+                        ) : (
+                          match.linkedinUrl
+                        )}
+                      </Typography>
+                    ) : null}
+                    {match.instagramUrl ? (
+                      <Typography variant="body2" color="text.secondary">
+                        Instagram:{" "}
+                        {instagramHref ? (
+                          <Link href={instagramHref} target="_blank" rel="noopener">
+                            {match.instagramUrl}
+                          </Link>
+                        ) : (
+                          match.instagramUrl
+                        )}
+                      </Typography>
+                    ) : null}
+                  </Stack>
+                ) : null}
+              </Box>
+            </Stack>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={() => handleMatchIntro(match.userId)}
+                disabled={isLoadingIntro}
+                startIcon={<WhatsAppIcon fontSize="small" />}
+              >
+                {isLoadingIntro ? copy.matches.ctaLoading : copy.matches.cta}
+              </Button>
+              <Button
+                size="small"
+                variant="text"
+                color="error"
+                onClick={() => openReportDialog(match)}
+              >
+                {copy.report.ctaLabel}
+              </Button>
+              {matchError && (
+                <Typography variant="caption" color="error">
+                  {matchError}
+                </Typography>
+              )}
+            </Stack>
+          </Stack>
+        );
+      })}
+    </Stack>
+  );
 
   if (!sessionReady || !hasSession) {
     return null;
@@ -766,109 +895,28 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
                     {copy.matches.empty}
                   </Typography>
                 )}
-                {matchRecommendations.length > 0 && (
-                  <Stack spacing={1.25} divider={<Divider flexItem />}>
-                    {matchRecommendations.map((match) => {
-                      const state = getIntroState(match.userId);
-                      const isLoadingIntro = state === "loading";
-                      const matchError =
-                        state === "error"
-                          ? introStatus[match.userId]?.message || copy.matches.error
-                          : undefined;
-                      const linkedinHref = buildSocialHref(match.linkedinUrl, "linkedin");
-                      const instagramHref = buildSocialHref(match.instagramUrl, "instagram");
-
-                      return (
-                        <Stack key={match.userId} spacing={1}>
-                          <Stack direction="row" alignItems="flex-start" spacing={1.5}>
-                            <Avatar
-                              src={match.photoUrl}
-                              alt={match.displayName}
-                              sx={{ width: 56, height: 56, cursor: "pointer" }}
-                              onClick={() => {
-                                if (match.photoUrl) {
-                                  setEnlargedPhoto({ url: match.photoUrl, name: match.displayName });
-                                }
-                              }}
-                            >
-                              {match.displayName.charAt(0)}
-                            </Avatar>
-                            <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-                              <Typography variant="subtitle2">{match.displayName}</Typography>
-                              <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: "normal" }}>
-                                {locale === "en" ? "Cities: " : "Ciudades: "}
-                                {match.sharedCities.join(", ")}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: "normal" }}>
-                                {locale === "en" ? "Interests: " : "Intereses: "}
-                                {match.sharedInterests.map(formatInterestLabel).join(", ")}
-                              </Typography>
-                              {match.bio ? (
-                                <Typography
-                                  variant="body2"
-                                  color="text.primary"
-                                  sx={{ whiteSpace: "normal", wordBreak: "break-word" }}
-                                >
-                                  {match.bio}
-                                </Typography>
-                              ) : null}
-                              {match.linkedinUrl || match.instagramUrl ? (
-                                <Stack spacing={0.5} sx={{ mt: 0.5 }}>
-                                  {match.linkedinUrl ? (
-                                    <Typography variant="body2" color="text.secondary">
-                                      LinkedIn:{" "}
-                                      {linkedinHref ? (
-                                        <Link href={linkedinHref} target="_blank" rel="noopener">
-                                          {match.linkedinUrl}
-                                        </Link>
-                                      ) : (
-                                        match.linkedinUrl
-                                      )}
-                                    </Typography>
-                                  ) : null}
-                                  {match.instagramUrl ? (
-                                    <Typography variant="body2" color="text.secondary">
-                                      Instagram:{" "}
-                                      {instagramHref ? (
-                                        <Link href={instagramHref} target="_blank" rel="noopener">
-                                          {match.instagramUrl}
-                                        </Link>
-                                      ) : (
-                                        match.instagramUrl
-                                      )}
-                                    </Typography>
-                                  ) : null}
-                                </Stack>
-                              ) : null}
-                            </Box>
-                          </Stack>
-                          <Stack direction="row" spacing={1} alignItems="center">
-                            <Button
-                              size="small"
-                              variant="outlined"
-                              onClick={() => handleMatchIntro(match.userId)}
-                              disabled={isLoadingIntro}
-                              startIcon={<WhatsAppIcon fontSize="small" />}
-                            >
-                              {isLoadingIntro ? copy.matches.ctaLoading : copy.matches.cta}
-                            </Button>
-                            <Button
-                              size="small"
-                              variant="text"
-                              color="error"
-                              onClick={() => openReportDialog(match)}
-                            >
-                              {copy.report.ctaLabel}
-                            </Button>
-                            {matchError && (
-                              <Typography variant="caption" color="error">
-                                {matchError}
-                              </Typography>
-                            )}
-                          </Stack>
-                        </Stack>
-                      );
-                    })}
+                {matchesStatus === "ready" && matchRecommendations.length > 0 && (
+                  <Stack spacing={2.5}>
+                    <Stack spacing={1}>
+                      <Typography variant="subtitle1">{copy.matches.newTitle}</Typography>
+                      {newMatches.length === 0 ? (
+                        <Typography variant="body2" color="text.secondary">
+                          {copy.matches.newEmpty}
+                        </Typography>
+                      ) : (
+                        renderMatchCards(newMatches)
+                      )}
+                    </Stack>
+                    <Stack spacing={1}>
+                      <Typography variant="subtitle1">{copy.matches.connectedTitle}</Typography>
+                      {contactedMatches.length === 0 ? (
+                        <Typography variant="body2" color="text.secondary">
+                          {copy.matches.connectedEmpty}
+                        </Typography>
+                      ) : (
+                        renderMatchCards(contactedMatches)
+                      )}
+                    </Stack>
                   </Stack>
                 )}
               </>

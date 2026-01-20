@@ -24,6 +24,7 @@ export type MatchRecommendation = {
   score: number;
   compatibility: MatchCompatibility;
   introPreview?: MatchIntroPreview;
+  whatsappIntroAt?: string;
 };
 
 export type MatchIntroResponse = {
@@ -36,6 +37,18 @@ export type MatchIntroResponse = {
     name?: string;
     tagline?: string;
   };
+};
+
+export type WhatsappClickPayload = {
+  partnerId: string;
+  matchCode?: string;
+  sharedCities?: string[];
+  sharedInterests?: string[];
+  sponsor?: {
+    name?: string;
+    tagline?: string;
+  };
+  source?: "match_intro";
 };
 
 const DEFAULT_LIMIT = 5;
@@ -143,5 +156,24 @@ export async function requestMatchIntro(
   }
 
   return (await response.json()) as MatchIntroResponse;
+}
+
+export async function logWhatsappClick(payload: WhatsappClickPayload): Promise<void> {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!apiUrl) {
+    throw new Error("El servicio de analytics no está configurado.");
+  }
+
+  const normalizedApiUrl = apiUrl.replace(/\/$/, "");
+  const response = await fetch(`${normalizedApiUrl}/analytics/whatsapp-click`, {
+    method: "POST",
+    headers: buildHeaders(),
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || "No pudimos registrar el clic de WhatsApp.");
+  }
 }
 import { getStoredUserId } from "@/utils/local-user";
