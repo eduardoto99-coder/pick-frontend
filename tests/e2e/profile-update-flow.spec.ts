@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { execFileSync } from "node:child_process";
+import { attachUiDiagnostics } from "./test-helpers";
 
 const stackName = process.env.E2E_STACK_NAME ?? "pick-backend";
 const runId = Date.now().toString(36);
@@ -206,6 +207,10 @@ test.beforeAll(async () => {
 
   await seedCandidateProfile(candidateAId, candidateAName, "cartagena", interestAId);
   await seedCandidateProfile(candidateBId, candidateBName, "cali", interestBId);
+});
+
+test.beforeEach(({ page }) => {
+  attachUiDiagnostics(page);
 });
 
 test.afterAll(() => {
