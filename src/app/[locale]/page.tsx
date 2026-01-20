@@ -9,12 +9,6 @@ import LandingFooter from "@/components/navigation/LandingFooter";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { defaultLocale } from "@/i18n/config";
 
-type PageParams = {
-  params: {
-    locale: string;
-  };
-};
-
 export async function generateMetadata(): Promise<Metadata> {
   const dictionary = await getDictionary(defaultLocale);
 
@@ -24,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function LandingPage({ params }: PageParams) {
+export default async function LandingPage() {
   // TODO: re-enable locale-based rendering (e.g., "en") when English copy is ready
   const locale = defaultLocale;
   const dictionary = await getDictionary(locale);

@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
 import { Container, Paper, Stack, Typography } from "@mui/material";
 
-type PageProps = {
-  params: {
-    locale: string;
-  };
-};
-
 export const metadata: Metadata = {
   title: "Política de cookies",
   description: "Uso de cookies y almacenamiento local en Pick.",
 };
 
-export default function CookiesPage({ params: _params }: PageProps) {
+export default function CookiesPage() {
   return (
     <Container maxWidth="md" sx={{ py: { xs: 6, md: 10 } }} component="main" id="main-content">
       <Stack spacing={3}>
