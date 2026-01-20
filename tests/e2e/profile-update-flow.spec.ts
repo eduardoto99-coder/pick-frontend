@@ -112,7 +112,7 @@ async function seedCandidateProfile(
     profile: {
       displayName,
       bio: "Perfil de prueba para validar actualizaciones completas en el flujo E2E.",
-      existingPhotoUrl: "https://example.com/pick-e2e.png",
+      existingPhotoUrl: "https://placehold.co/200x200/png",
       linkedinUrl: "https://www.linkedin.com/in/pick-e2e",
       instagramUrl: "https://instagram.com/pick-e2e",
     },
