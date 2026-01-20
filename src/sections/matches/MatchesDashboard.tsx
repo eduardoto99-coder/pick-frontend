@@ -52,9 +52,7 @@ export default function MatchesDashboard({ locale }: MatchesDashboardProps) {
   const copy = getMatchesCopy(locale);
   const titleId = "matches-dashboard-title";
   const descriptionId = "matches-dashboard-description";
-  const [profileComplete, setProfileComplete] = useState<boolean>(() =>
-    typeof window !== "undefined" ? isProfileMarkedComplete() : false,
-  );
+  const [profileComplete, setProfileComplete] = useState(false);
   const [matches, setMatches] = useState<MatchRecommendation[]>([]);
   const [status, setStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [error, setError] = useState<string>();
@@ -115,12 +113,13 @@ export default function MatchesDashboard({ locale }: MatchesDashboardProps) {
   }, [copy.feedback.error, profileComplete]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const syncProfile = () => setProfileComplete(isProfileMarkedComplete());
-      window.addEventListener("storage", syncProfile);
-      return () => window.removeEventListener("storage", syncProfile);
+    if (typeof window === "undefined") {
+      return undefined;
     }
-    return undefined;
+    const syncProfile = () => setProfileComplete(isProfileMarkedComplete());
+    syncProfile();
+    window.addEventListener("storage", syncProfile);
+    return () => window.removeEventListener("storage", syncProfile);
   }, []);
 
   useEffect(() => {

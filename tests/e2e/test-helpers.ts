@@ -4,6 +4,12 @@ export function attachUiDiagnostics(page: Page) {
   page.on("requestfailed", (request) => {
     const failure = request.failure();
     const errorText = failure?.errorText ?? "unknown";
+    if (
+      errorText.includes("ERR_ABORTED") ||
+      errorText.includes("ERR_NETWORK_IO_SUSPENDED")
+    ) {
+      return;
+    }
     console.error(
       `[e2e][requestfailed] ${request.method()} ${request.url()} :: ${errorText}`,
     );

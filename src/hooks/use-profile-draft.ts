@@ -47,13 +47,7 @@ function fileToDataUrl(file: File, errorMessage: string): Promise<string> {
 export function useProfileDraft(locale?: string) {
   const resolvedLocale = isLocale(locale) ? (locale as Locale) : defaultLocale;
   const messages = useMemo(() => draftMessages[resolvedLocale], [resolvedLocale]);
-  const [draft, setDraft] = useState<ProfileDraft>(() => {
-    if (typeof window === "undefined") {
-      return DEFAULT_PROFILE_DRAFT;
-    }
-    const storedName = getStoredDisplayName();
-    return storedName ? { ...DEFAULT_PROFILE_DRAFT, displayName: storedName } : DEFAULT_PROFILE_DRAFT;
-  });
+  const [draft, setDraft] = useState<ProfileDraft>(() => DEFAULT_PROFILE_DRAFT);
   const [status, setStatus] = useState<ProfileStatus>("idle");
   const [submitError, setSubmitError] = useState<string>();
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
@@ -143,6 +137,17 @@ export function useProfileDraft(locale?: string) {
 
     return () => window.clearTimeout(timeout);
   }, [status]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const storedName = getStoredDisplayName();
+    if (!storedName) {
+      return;
+    }
+    setDraft((prev) => (prev.displayName ? prev : { ...prev, displayName: storedName }));
+  }, []);
 
   useEffect(() => {
     async function loadProfile() {

@@ -77,9 +77,7 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
     hasLoadedProfile,
   } = useProfileDraft(locale);
   const [attemptedSteps, setAttemptedSteps] = useState<number[]>([]);
-  const [hasSavedProfile, setHasSavedProfile] = useState<boolean>(() =>
-    typeof window !== "undefined" ? isProfileMarkedComplete() : false,
-  );
+  const [hasSavedProfile, setHasSavedProfile] = useState(false);
   const [autoMarkedFromLoad, setAutoMarkedFromLoad] = useState(false);
   const [showSavedToast, setShowSavedToast] = useState(false);
   const [reportTarget, setReportTarget] = useState<MatchRecommendation | null>(null);
@@ -147,6 +145,13 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
       router.replace(signInHref);
     }
   }, [sessionReady, hasSession, router, signInHref]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    setHasSavedProfile(isProfileMarkedComplete());
+  }, []);
 
   useEffect(() => {
     if (autoMarkedFromLoad) return;
