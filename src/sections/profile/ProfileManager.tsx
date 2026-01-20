@@ -682,7 +682,7 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
         const instagramHref = buildSocialHref(match.instagramUrl, "instagram");
 
         return (
-          <Stack key={match.userId} spacing={1}>
+          <Stack key={match.userId} spacing={1} data-testid={`match-card-${match.userId}`}>
             <Stack direction="row" alignItems="flex-start" spacing={1.5}>
               <Avatar
                 src={match.photoUrl}
@@ -897,7 +897,7 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
                 )}
                 {matchesStatus === "ready" && matchRecommendations.length > 0 && (
                   <Stack spacing={2.5}>
-                    <Stack spacing={1}>
+                    <Stack spacing={1} data-testid="matches-new">
                       <Typography variant="subtitle1">{copy.matches.newTitle}</Typography>
                       {newMatches.length === 0 ? (
                         <Typography variant="body2" color="text.secondary">
@@ -907,7 +907,7 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
                         renderMatchCards(newMatches)
                       )}
                     </Stack>
-                    <Stack spacing={1}>
+                    <Stack spacing={1} data-testid="matches-connected">
                       <Typography variant="subtitle1">{copy.matches.connectedTitle}</Typography>
                       {contactedMatches.length === 0 ? (
                         <Typography variant="body2" color="text.secondary">
