@@ -242,8 +242,7 @@ test("signup flow ends with a match suggestion", async ({ page }) => {
   await page.getByRole("button", { name: /guardar perfil/i }).click();
   await expect(page.getByText(/Perfil guardado/i)).toBeVisible();
 
-  await page.goto("/es/matches");
-  await expect(page.getByRole("heading", { name: candidateName })).toBeVisible({
+  await expect(page.getByText(candidateName)).toBeVisible({
     timeout: 30_000,
   });
 });

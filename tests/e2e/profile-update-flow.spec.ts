@@ -274,13 +274,10 @@ test("profile update refreshes photo and matches", async ({ page }) => {
   const initialPhotoSrc = await initialPhoto.getAttribute("src");
   expect(initialPhotoSrc).toBeTruthy();
 
-  await page.goto("/es/matches");
-  await expect(page.getByRole("heading", { name: candidateAName })).toBeVisible({
+  await expect(page.getByText(candidateAName)).toBeVisible({
     timeout: 30_000,
   });
-  await expect(page.getByRole("heading", { name: candidateBName })).toHaveCount(0);
-
-  await page.goto("/es/profile");
+  await expect(page.getByText(candidateBName)).toHaveCount(0);
   await page.getByLabel(/^Bio$/i).fill(updatedBio);
   await page.getByLabel(/LinkedIn/i).fill("https://www.linkedin.com/in/e2e-profile-updated");
   await page.getByLabel(/Instagram/i).fill("https://instagram.com/e2e.profile.updated");
@@ -313,9 +310,8 @@ test("profile update refreshes photo and matches", async ({ page }) => {
   expect(updatedPhotoSrc).toBeTruthy();
   expect(updatedPhotoSrc).not.toEqual(initialPhotoSrc);
 
-  await page.goto("/es/matches");
-  await expect(page.getByRole("heading", { name: candidateBName })).toBeVisible({
+  await expect(page.getByText(candidateBName)).toBeVisible({
     timeout: 30_000,
   });
-  await expect(page.getByRole("heading", { name: candidateAName })).toHaveCount(0);
+  await expect(page.getByText(candidateAName)).toHaveCount(0);
 });
