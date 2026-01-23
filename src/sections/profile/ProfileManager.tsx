@@ -896,8 +896,8 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
                   </Typography>
                 )}
                 {matchesStatus === "ready" && matchRecommendations.length > 0 && (
-                  <Stack spacing={2.5}>
-                    <Stack spacing={1} data-testid="matches-new">
+                  <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 3 }}>
+                    <Stack spacing={1} data-testid="matches-new" sx={{ flex: 1, minWidth: 0 }}>
                       <Typography variant="subtitle1">{copy.matches.newTitle}</Typography>
                       {newMatches.length === 0 ? (
                         <Typography variant="body2" color="text.secondary">
@@ -907,7 +907,7 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
                         renderMatchCards(newMatches)
                       )}
                     </Stack>
-                    <Stack spacing={1} data-testid="matches-connected">
+                    <Stack spacing={1} data-testid="matches-connected" sx={{ flex: 1, minWidth: 0 }}>
                       <Typography variant="subtitle1">{copy.matches.connectedTitle}</Typography>
                       {contactedMatches.length === 0 ? (
                         <Typography variant="body2" color="text.secondary">
@@ -917,7 +917,7 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
                         renderMatchCards(contactedMatches)
                       )}
                     </Stack>
-                  </Stack>
+                  </Box>
                 )}
               </>
             )}
