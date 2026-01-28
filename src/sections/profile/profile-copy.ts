@@ -138,7 +138,7 @@ const copy: Record<Locale, ProfileCopy> = {
   },
   matches: {
     title: "Sugerencias",
-    helper: "",
+    helper: "Los planes de Pick siempre se proponen en lugares públicos para interacciones seguras.",
     newTitle: "Nuevas sugerencias",
     newEmpty: "Aún no tienes nuevas sugerencias.",
     connectedTitle: "Relaciones iniciadas",
@@ -222,7 +222,7 @@ const copy: Record<Locale, ProfileCopy> = {
   },
   matches: {
     title: "Suggestions",
-    helper: "",
+    helper: "Pick plans are always proposed in public places for safer interactions.",
     newTitle: "New suggestions",
     newEmpty: "You have no new suggestions yet.",
     connectedTitle: "Connections started",

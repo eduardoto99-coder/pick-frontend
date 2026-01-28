@@ -866,7 +866,7 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
           {submitError ? <Alert severity="error">{submitError}</Alert> : null}
         </Stack>
 
-        <Box sx={{ ...panelSx, width: "100%" }}>
+        <Box sx={{ width: "100%" }}>
           <Stack spacing={2}>
             <Box>
               <Typography variant="h5">{copy.matches.title}</Typography>
@@ -897,26 +897,30 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
                 )}
                 {matchesStatus === "ready" && matchRecommendations.length > 0 && (
                   <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 3 }}>
-                    <Stack spacing={1} data-testid="matches-new" sx={{ flex: 1, minWidth: 0 }}>
-                      <Typography variant="subtitle1">{copy.matches.newTitle}</Typography>
-                      {newMatches.length === 0 ? (
-                        <Typography variant="body2" color="text.secondary">
-                          {copy.matches.newEmpty}
-                        </Typography>
-                      ) : (
-                        renderMatchCards(newMatches)
-                      )}
-                    </Stack>
-                    <Stack spacing={1} data-testid="matches-connected" sx={{ flex: 1, minWidth: 0 }}>
-                      <Typography variant="subtitle1">{copy.matches.connectedTitle}</Typography>
-                      {contactedMatches.length === 0 ? (
-                        <Typography variant="body2" color="text.secondary">
-                          {copy.matches.connectedEmpty}
-                        </Typography>
-                      ) : (
-                        renderMatchCards(contactedMatches)
-                      )}
-                    </Stack>
+                    <Box sx={{ ...panelSx, flex: 1, minWidth: 0 }}>
+                      <Stack spacing={1} data-testid="matches-new">
+                        <Typography variant="subtitle1">{copy.matches.newTitle}</Typography>
+                        {newMatches.length === 0 ? (
+                          <Typography variant="body2" color="text.secondary">
+                            {copy.matches.newEmpty}
+                          </Typography>
+                        ) : (
+                          renderMatchCards(newMatches)
+                        )}
+                      </Stack>
+                    </Box>
+                    <Box sx={{ ...panelSx, flex: 1, minWidth: 0 }}>
+                      <Stack spacing={1} data-testid="matches-connected">
+                        <Typography variant="subtitle1">{copy.matches.connectedTitle}</Typography>
+                        {contactedMatches.length === 0 ? (
+                          <Typography variant="body2" color="text.secondary">
+                            {copy.matches.connectedEmpty}
+                          </Typography>
+                        ) : (
+                          renderMatchCards(contactedMatches)
+                        )}
+                      </Stack>
+                    </Box>
                   </Box>
                 )}
               </>

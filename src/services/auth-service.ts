@@ -2,6 +2,7 @@ export type RegisterInput = {
   email: string;
   password: string;
   displayName: string;
+  ageConfirmed: boolean;
   acceptTerms: boolean;
   termsVersion: string;
   locale?: string;

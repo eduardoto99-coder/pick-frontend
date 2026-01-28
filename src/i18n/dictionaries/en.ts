@@ -5,7 +5,7 @@ const en: LandingDictionary = {
     id: "home",
     title: "Pick writes your WhatsApp intro and pairs you with someone on your wavelength.",
     description:
-      "Share the plan and city. Pick matches you, writes the intro in your tone, and opens WhatsApp ready to send so you can confirm fast.",
+      "Plans are always proposed in public places for safer interactions. Share the plan and city—Pick matches you, writes the intro in your tone, and opens WhatsApp ready to send so you can confirm fast.",
     primaryCta: {
       label: "Start your plan",
       href: "/app",
@@ -16,7 +16,7 @@ const en: LandingDictionary = {
     },
     differentiators: [
       "AI-generated intro ready in WhatsApp",
-      "Matches ready to move in any city",
+      "Matches ready to move in any city, free and no subscription",
       "Crossed interests and timing so you decide fast",
     ],
     cardTitle: "How Pick gets you talking",

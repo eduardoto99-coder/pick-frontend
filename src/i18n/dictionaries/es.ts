@@ -3,8 +3,8 @@ import type { LandingDictionary } from "../types";
 const es: LandingDictionary = {
   hero: {
     id: "inicio",
-    title: "Pick escribe tu intro y te conecta con quien vibra igual para ese plan.",
-    description: "",
+    title: "Pick escribe tu intro y te conecta con quien vibra igual que tu",
+    description: "Los planes de Pick siempre se proponen en lugares públicos para interacciones seguras.",
     primaryCta: {
       label: "Empieza con Pick",
       href: "/app",
@@ -15,23 +15,23 @@ const es: LandingDictionary = {
     },
     differentiators: [
       "Mensaje inicial generado por IA, listo para enviar",
-      "Matches activos en la ciudad que visites, sin suscripción",
+      "Matches activos en la ciudad que visites, gratis y sin suscripción",
       "Cruce de intereses y horarios para moverse rápido",
     ],
     cardTitle: "Cómo te llevamos al encuentro",
     cardPoints: [
-      "Describe el plan y la ciudad; afina mood, zona y fecha.",
+      "Describe el plan y la ciudad.",
       "Pick encuentra a quien busca lo mismo y redacta el intro automático en tu voz.",
-      "Abres el chat, envías y cierran lugar y hora en minutos.",
+      "Abres el chat, envías y concretan lugar y hora en minutos.",
     ],
-    messagePreviewLabel: "Así llega el mensaje automático",
+    messagePreviewLabel: "tu mensaje automatico puede verse asi:",
     messagePreview:
       "Hey Ana, soy Edu. ¿Nos vemos en el rooftop de Laureles el viernes 8pm? Reservo mesa y llevo playlist; si te sirve te mando la ubicación.",
   },
   journey: {
     id: "journey",
-    title: 'Tres pasos de "¿con quién?" a "ya está el chat".',
-    description: "Diseñado para definir el plan, conectar y chatear sin fricción.",
+    title: 'Tres pasos desde "¿con quién?" a a que horas nos vemos',
+    description: "Diseñado para definir el plan y conectar de verdad",
     steps: [
       {
         title: "1. Di el plan",
@@ -43,7 +43,7 @@ const es: LandingDictionary = {
           "La IA cruza intereses y horarios, elige el match y deja el mensaje automático listo para enviar.",
       },
       {
-        title: "3. Vivan el plan y cuéntanos",
+        title: "3. vive el plan y cuentanos",
         description: "Cierren lugar y hora en el chat y comparte feedback para el próximo plan.",
       },
     ],
@@ -52,7 +52,7 @@ const es: LandingDictionary = {
     id: "social-proof",
     title: "Personas reales creando colaboraciones y amistades duraderas.",
     subtitle:
-      "Profesionales híbridos, creativos y anfitriones locales usan Pick para encontrar aliados con intención.",
+      "Emprendedores, creativos y personas que quieren socializar usan Pick para encontrar aliados con intención.",
     disclaimer: "Historias representativas; nombres y detalles modificados.",
     stories: [
       {
@@ -77,7 +77,7 @@ const es: LandingDictionary = {
   },
   highlights: {
     id: "destacados",
-    title: "Por qué Pick acelera tus planes uno a uno.",
+    title: "Como pick puede conectarte con personas extraordinarias",
     description: "IA + cuidado humano para conectar y dejarte un intro listo para enviar.",
     items: [
       {
@@ -88,12 +88,12 @@ const es: LandingDictionary = {
       {
         title: "Inteligencia artificial que desbloquea conversaciones",
         description:
-          "Recibe intros con contexto y primer movimiento, ya listos para enviar.",
+          "Recibe intros con contexto e intencion ya listos para enviar.",
       },
       {
         title: "Momentum continuo",
         description:
-          "Tus comentarios reactivan nuevas sugerencias y recordatorios suaves para que el plan suceda.",
+          "tus experiencias activan nuevas sugerencias para que nuevos planes sucedan",
       },
     ],
     closingCta: {

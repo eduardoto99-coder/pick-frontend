@@ -47,6 +47,7 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
   });
   const [status, setStatus] = useState<StatusState | null>(null);
   const [isSubmitting, setSubmitting] = useState(false);
+  const [isAdult, setIsAdult] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showContract, setShowContract] = useState(false);
   const router = useRouter();
@@ -71,6 +72,11 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
 
     if (form.password.length < 8) {
       setStatus({ type: "error", message: "La contraseña debe tener mínimo 8 caracteres." });
+      return false;
+    }
+
+    if (!isAdult) {
+      setStatus({ type: "error", message: "Debes confirmar que eres mayor de edad." });
       return false;
     }
 
@@ -100,6 +106,7 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
         displayName: form.displayName.trim(),
         email: form.email.trim().toLowerCase(),
         password: form.password,
+        ageConfirmed: isAdult,
         acceptTerms: true,
         termsVersion: ACTIVE_TERMS_VERSION,
         locale,
@@ -155,6 +162,29 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
         required
         fullWidth
         helperText="Mínimo 8 caracteres."
+      />
+      <FormControlLabel
+        sx={{
+          alignItems: "flex-start",
+          mt: 1,
+          ".MuiCheckbox-root": { mt: 0.25 },
+        }}
+        control={
+          <Checkbox
+            checked={isAdult}
+            onChange={(event) => setIsAdult(event.target.checked)}
+            required
+          />
+        }
+        label={
+          <Typography
+            variant="body2"
+            component="span"
+            sx={{ display: "inline", lineHeight: 1.5 }}
+          >
+            Confirmo que soy mayor de edad.
+          </Typography>
+        }
       />
       <FormControlLabel
         sx={{
