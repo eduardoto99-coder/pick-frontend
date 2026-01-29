@@ -122,7 +122,7 @@ const copy: Record<Locale, ProfileCopy> = {
     title: "Intereses",
     helper: "",
     pendingNotice:
-      "Este interés es personalizado y está en revisión. Lo aprobaremos en menos de 24 horas para hacer match con personas.",
+      "Ingresaste un interés personalizado. Lo revisaremos para confirmar que cumple los términos de Pick.",
   },
   locations: {
     title: "Ciudades",
@@ -206,7 +206,7 @@ const copy: Record<Locale, ProfileCopy> = {
     title: "Interests",
     helper: "",
     pendingNotice:
-      "This custom interest is under review. It will be approved within 24 hours so you can match with people.",
+      "You added a custom interest. We'll review it to confirm it follows Pick's terms.",
   },
   locations: {
     title: "Cities",
