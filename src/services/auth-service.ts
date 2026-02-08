@@ -50,6 +50,7 @@ export type PasswordResetResponse = {
   email: string;
 };
 
+
 function getApiUrl(): string {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!apiUrl) {

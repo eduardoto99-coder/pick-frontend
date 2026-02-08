@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
+  AlertTitle,
   Avatar,
   Box,
   Button,
@@ -23,6 +24,7 @@ import {
 } from "@mui/material";
 import { createFilterOptions } from "@mui/material/Autocomplete";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
@@ -34,7 +36,13 @@ import {
   markProfileComplete,
 } from "@/utils/local-user";
 
-import { BIO_CHARACTER_LIMIT, CITY_OPTIONS, SOCIAL_LINK_LIMIT } from "@/constants/profile";
+import {
+  BIO_CHARACTER_LIMIT,
+  CITY_OPTIONS,
+  CITY_SELECTION_LIMIT,
+  INTEREST_LIMIT,
+  SOCIAL_LINK_LIMIT,
+} from "@/constants/profile";
 import { useProfileDraft } from "@/hooks/use-profile-draft";
 import { useAccountLinks } from "@/hooks/use-account-links";
 import { getProfileCopy } from "@/sections/profile/profile-copy";
@@ -52,6 +60,14 @@ type ProfileManagerProps = {
 };
 
 type StepId = "bio" | "photo" | "interests" | "social" | "locations";
+
+type CustomInterestOption = {
+  inputValue: string;
+  label: string;
+  isCustom: true;
+};
+
+type InterestAutocompleteOption = InterestOption | CustomInterestOption;
 
 const STEP_IDS: StepId[] = ["bio", "photo", "interests", "social", "locations"];
 
@@ -119,7 +135,12 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
 
   const photoPreview = draft.photo?.dataUrl ?? draft.existingPhotoUrl;
 
+  const maxInterestCount = INTEREST_LIMIT.max;
+  const maxCityCount = CITY_SELECTION_LIMIT.max;
+  const interestCount = draft.interests.length;
+  const cityCount = selectedCities.length;
   const canAddMoreInterests = canSelectInterest();
+  const canAddMoreCities = cityCount < maxCityCount;
   const [interestOptions, setInterestOptions] = useState<InterestOption[]>([]);
   const [interestLookup, setInterestLookup] = useState<Record<string, InterestOption>>({});
   const [interestQuery, setInterestQuery] = useState("");
@@ -136,7 +157,38 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
   const [enlargedPhoto, setEnlargedPhoto] = useState<{ url: string; name: string } | null>(null);
   const canViewMatches = hasSavedProfile && validation.isValid;
   const reportDialogOpen = Boolean(reportTarget);
-  const filterInterestOptions = createFilterOptions<InterestOption>();
+  const formatInterestOptionLabel = (option: InterestAutocompleteOption | string) =>
+    typeof option === "string"
+      ? option
+      : "inputValue" in option
+        ? option.inputValue
+        : option.label ?? "";
+  const filterInterestOptions = createFilterOptions<InterestAutocompleteOption>({
+    stringify: formatInterestOptionLabel,
+  });
+  const formatLimitLabel = (template: string, count: number, max: number) =>
+    template.replace("{count}", `${count}`).replace("{max}", `${max}`);
+  const interestCounterLabel = formatLimitLabel(
+    copy.interests.counterLabel,
+    interestCount,
+    maxInterestCount,
+  );
+  const cityCounterLabel = formatLimitLabel(
+    copy.locations.counterLabel,
+    cityCount,
+    maxCityCount,
+  );
+  const interestLimitReachedLabel = formatLimitLabel(
+    copy.interests.limitReachedLabel,
+    interestCount,
+    maxInterestCount,
+  );
+  const cityLimitReachedLabel = formatLimitLabel(
+    copy.locations.limitReachedLabel,
+    cityCount,
+    maxCityCount,
+  );
+  const locationsHelper = formatLimitLabel(copy.locations.helper ?? "", cityCount, maxCityCount);
   const hasSubtitle = Boolean(subtitleText);
   const hasPendingInterests = pendingInterestIds.some((id) => draft.interests.includes(id));
   const contactedMatches = useMemo(
@@ -494,14 +546,31 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
           </Stack>
         );
       case "interests":
+        const interestHelper = copy.interests.helper?.trim() ?? "";
+        const interestHelperLines = [
+          interestCounterLabel,
+          ...(canAddMoreInterests ? [] : [interestLimitReachedLabel]),
+          ...(interestHelper ? [interestHelper] : []),
+        ];
+        const interestHelperText = (
+          <>
+            {interestHelperLines.map((line, index) => (
+              <span key={`${line}-${index}`}>
+                {line}
+                {index < interestHelperLines.length - 1 ? <br /> : null}
+              </span>
+            ))}
+          </>
+        );
         return (
           <Stack spacing={3}>
-            <Autocomplete
+            <Autocomplete<InterestAutocompleteOption, false, false, true>
               freeSolo
               value={null}
               options={interestOptions}
-              getOptionLabel={(option) => (typeof option === "string" ? option : option.label)}
+              getOptionLabel={formatInterestOptionLabel}
               loading={interestStatus === "loading"}
+              disabled={!canAddMoreInterests}
               inputValue={interestInput}
               onInputChange={(_, value) => {
                 setInterestInput(value);
@@ -510,6 +579,8 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
               onChange={(_, value) => {
                 if (typeof value === "string") {
                   addInterestByLabel(value);
+                } else if (value && "inputValue" in value) {
+                  addInterestByLabel(value.inputValue);
                 } else if (value && "id" in value) {
                   addInterestByOption(value);
                 }
@@ -518,26 +589,61 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
               }}
               filterOptions={(options, state) => {
                 // Client-side filter to complement server search results.
-                if (!state.inputValue.trim()) return options;
-                const query = state.inputValue.trim().toLowerCase();
-                return filterInterestOptions(options, {
+                const inputValue = state.inputValue.trim();
+                if (!inputValue) return options;
+
+                const filtered = filterInterestOptions(options, {
                   ...state,
-                  getOptionLabel: (option) =>
-                    typeof option === "string" ? option : option.label ?? "",
-                  inputValue: query,
-                }).filter((option) =>
-                  (typeof option === "string" ? option : option.label ?? "")
-                    .toLowerCase()
-                    .includes(query),
+                  inputValue,
+                });
+
+                const normalizedInput = inputValue.toLowerCase();
+                const hasExactMatch = options.some(
+                  (option) =>
+                    formatInterestOptionLabel(option).trim().toLowerCase() === normalizedInput,
                 );
+
+                if (!hasExactMatch) {
+                  filtered.unshift({
+                    inputValue,
+                    label: inputValue,
+                    isCustom: true,
+                  });
+                }
+
+                return filtered;
               }}
+              renderOption={(props, option) => {
+                if (typeof option !== "string" && "inputValue" in option) {
+                  return (
+                    <li {...props}>
+                      <Stack direction="row" spacing={1.5} alignItems="center">
+                        <AddCircleOutlineIcon fontSize="small" />
+                        <Box>
+                          <Typography variant="body2">{copy.interests.createOptionLabel}</Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {option.inputValue}
+                          </Typography>
+                        </Box>
+                      </Stack>
+                    </li>
+                  );
+                }
+
+                return <li {...props}>{formatInterestOptionLabel(option)}</li>;
+              }}
+              noOptionsText={copy.interests.noOptionsText}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label={copy.fields.interestsLabel}
                   placeholder={copy.fields.interestsPlaceholder}
                   error={showErrorsForStep && Boolean(validation.errors.interests)}
-                  helperText={showErrorsForStep ? validation.errors.interests : undefined}
+                  helperText={
+                    showErrorsForStep && validation.errors.interests
+                      ? validation.errors.interests
+                      : interestHelperText
+                  }
                   InputProps={{
                     ...params.InputProps,
                     endAdornment: (
@@ -584,15 +690,31 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
           </Stack>
         );
       case "locations":
+        const locationsHelperLines = [
+          cityCounterLabel,
+          ...(canAddMoreCities ? [] : [cityLimitReachedLabel]),
+          ...(locationsHelper ? [locationsHelper] : []),
+        ];
+        const locationsHelperText = (
+          <>
+            {locationsHelperLines.map((line, index) => (
+              <span key={`${line}-${index}`}>
+                {line}
+                {index < locationsHelperLines.length - 1 ? <br /> : null}
+              </span>
+            ))}
+          </>
+        );
         return (
           <Stack spacing={3}>
             <Autocomplete
               multiple
               options={CITY_OPTIONS}
               value={selectedCities}
+              disabled={!canAddMoreCities}
               onChange={(_, value) => {
                 markProfileDirty();
-                updateCities(value.map((city) => city.id));
+                updateCities(value.slice(0, maxCityCount).map((city) => city.id));
               }}
               getOptionLabel={(option) => `${option.label} · ${option.region}`}
               filterSelectedOptions
@@ -603,7 +725,11 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
                   label={copy.fields.citiesLabel}
                   placeholder={copy.fields.citiesPlaceholder}
                   error={showErrorsForStep && Boolean(validation.errors.cities)}
-                  helperText={showErrorsForStep ? validation.errors.cities : undefined}
+                  helperText={
+                    showErrorsForStep && validation.errors.cities
+                      ? validation.errors.cities
+                      : locationsHelperText
+                  }
                 />
               )}
             />
@@ -891,9 +1017,10 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
                   <Alert severity="warning">{matchesError ?? copy.matches.error}</Alert>
                 )}
                 {matchesStatus === "ready" && matchRecommendations.length === 0 && (
-                  <Typography variant="body2" color="text.secondary">
+                  <Alert severity="info">
+                    <AlertTitle>{copy.matches.emptyTitle}</AlertTitle>
                     {copy.matches.empty}
-                  </Typography>
+                  </Alert>
                 )}
                 {matchesStatus === "ready" && matchRecommendations.length > 0 && (
                   <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 3 }}>

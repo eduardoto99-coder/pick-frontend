@@ -41,11 +41,17 @@ export type ProfileCopy = {
     title: string;
     helper: string;
     pendingNotice: string;
+    createOptionLabel: string;
+    noOptionsText: string;
+    counterLabel: string;
+    limitReachedLabel: string;
   };
   locations: {
     title: string;
     helper: string;
     primaryTagLabel: string;
+    counterLabel: string;
+    limitReachedLabel: string;
   };
   summary: {
     title: string;
@@ -63,6 +69,7 @@ export type ProfileCopy = {
     connectedEmpty: string;
     loading: string;
     empty: string;
+    emptyTitle: string;
     error: string;
     cta: string;
     ctaLoading: string;
@@ -99,7 +106,7 @@ const copy: Record<Locale, ProfileCopy> = {
       instagramPlaceholder: "Ej. https://instagram.com/tuusuario",
       socialHelper: "",
       interestsLabel: "Buscar intereses",
-      interestsPlaceholder: "Escribe para buscar o proponer uno nuevo",
+      interestsPlaceholder: "Escribe para buscar o crear uno personalizado",
       citiesLabel: "Ciudades",
       citiesPlaceholder: "Bogotá, Medellín...",
       photoAltFallback: "Foto de perfil",
@@ -118,16 +125,22 @@ const copy: Record<Locale, ProfileCopy> = {
     uploadLabel: "Subir foto",
     removeLabel: "Quitar foto",
   },
-  interests: {
-    title: "Intereses",
-    helper: "",
-    pendingNotice:
-      "Ingresaste un interés personalizado. Lo revisaremos para confirmar que cumple los términos de Pick.",
-  },
+    interests: {
+      title: "Intereses",
+      helper: "Escribe para buscar o crear un interés personalizado.",
+      pendingNotice:
+        "Ingresaste un interés personalizado. Lo revisaremos para confirmar que cumple los términos de Pick.",
+      createOptionLabel: "Agregar interés personalizado",
+      noOptionsText: "No encontramos coincidencias. Presiona Enter para crear uno nuevo.",
+      counterLabel: "Intereses: {count}/{max}",
+      limitReachedLabel: "Llegaste al máximo de {max} intereses.",
+    },
   locations: {
     title: "Ciudades",
-    helper: "",
+    helper: "Selecciona hasta {max} ciudades donde puedas reunirte.",
     primaryTagLabel: " · Principal",
+    counterLabel: "Ciudades: {count}/{max}",
+    limitReachedLabel: "Llegaste al máximo de {max} ciudades.",
   },
   summary: {
       title: "Revisión y guardado",
@@ -144,7 +157,9 @@ const copy: Record<Locale, ProfileCopy> = {
     connectedTitle: "Relaciones iniciadas",
     connectedEmpty: "Aún no has enviado un mensaje por WhatsApp.",
     loading: "Buscando coincidencias compatibles...",
-    empty: "Completa tu perfil para desbloquear sugerencias.",
+    emptyTitle: "Sin sugerencias por ahora",
+    empty:
+      "Pick cruza tus intereses y ciudades con otras personas. Si no hay coincidencias compatibles aún, seguiremos buscando y verás nuevas sugerencias cuando aparezcan.",
       error: "No pudimos cargar tus coincidencias. Intenta nuevamente.",
       cta: "Abrir en WhatsApp",
       ctaLoading: "Generando intro...",
@@ -183,7 +198,7 @@ const copy: Record<Locale, ProfileCopy> = {
       instagramPlaceholder: "e.g., https://instagram.com/yourhandle",
       socialHelper: "",
       interestsLabel: "Search interests",
-      interestsPlaceholder: "Type to search or propose a new one",
+      interestsPlaceholder: "Type to search or create a custom one",
       citiesLabel: "Cities",
       citiesPlaceholder: "Bogotá, Medellín...",
       photoAltFallback: "Profile photo",
@@ -202,16 +217,22 @@ const copy: Record<Locale, ProfileCopy> = {
     uploadLabel: "Upload photo",
     removeLabel: "Remove photo",
   },
-  interests: {
-    title: "Interests",
-    helper: "",
-    pendingNotice:
-      "You added a custom interest. We'll review it to confirm it follows Pick's terms.",
-  },
+    interests: {
+      title: "Interests",
+      helper: "Type to search or create a custom interest.",
+      pendingNotice:
+        "You added a custom interest. We'll review it to confirm it follows Pick's terms.",
+      createOptionLabel: "Add a custom interest",
+      noOptionsText: "No matches found. Press Enter to create a new one.",
+      counterLabel: "Interests: {count}/{max}",
+      limitReachedLabel: "You reached the maximum of {max} interests.",
+    },
   locations: {
     title: "Cities",
-    helper: "",
+    helper: "Select up to {max} cities where you can meet.",
     primaryTagLabel: " · Primary",
+    counterLabel: "Cities: {count}/{max}",
+    limitReachedLabel: "You reached the maximum of {max} cities.",
   },
   summary: {
       title: "Review & save",
@@ -228,7 +249,9 @@ const copy: Record<Locale, ProfileCopy> = {
     connectedTitle: "Connections started",
     connectedEmpty: "You haven’t opened WhatsApp for a suggestion yet.",
     loading: "Curating compatible matches...",
-      empty: "Complete your profile to unlock recommendations.",
+      emptyTitle: "No suggestions yet",
+      empty:
+        "Pick matches your interests and cities with other people. If there are no compatible matches yet, we’ll keep searching and show new suggestions as they appear.",
       error: "We couldn’t load your matches. Try again shortly.",
       cta: "Open in WhatsApp",
       ctaLoading: "Drafting intro...",
