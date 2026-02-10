@@ -1,5 +1,4 @@
 import InstagramIcon from "@mui/icons-material/Instagram";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { Box, Container, Divider, IconButton, Link, Stack, Typography } from "@mui/material";
 import { defaultLocale, isLocale } from "@/i18n/config";
 import SupportEmail from "@/components/support/SupportEmail";
@@ -22,7 +21,6 @@ export default function LandingFooter({ locale = "es" }: LandingFooterProps) {
       cookies: string;
       legalNavLabel: string;
       instagramAria: string;
-      linkedinAria: string;
     }
   > = {
     es: {
@@ -32,7 +30,6 @@ export default function LandingFooter({ locale = "es" }: LandingFooterProps) {
       cookies: "Cookies",
       legalNavLabel: "Enlaces legales",
       instagramAria: "Instagram de Pick",
-      linkedinAria: "LinkedIn de Pick",
     },
     en: {
       rights: "All rights reserved.",
@@ -41,7 +38,6 @@ export default function LandingFooter({ locale = "es" }: LandingFooterProps) {
       cookies: "Cookies",
       legalNavLabel: "Legal links",
       instagramAria: "Pick on Instagram",
-      linkedinAria: "Pick on LinkedIn",
     },
   };
   const labels = copy[resolvedLocale];
@@ -91,23 +87,13 @@ export default function LandingFooter({ locale = "es" }: LandingFooterProps) {
           <Stack direction="row" spacing={1.5} alignItems="center">
             <IconButton
               component="a"
-              href="https://instagram.com"
+              href="https://www.instagram.com/pick.global"
               target="_blank"
               rel="noreferrer"
               aria-label={labels.instagramAria}
               sx={{ color: "#F5F2EB", border: "1px solid rgba(245, 242, 235, 0.36)" }}
             >
               <InstagramIcon />
-            </IconButton>
-            <IconButton
-              component="a"
-              href="https://www.linkedin.com"
-              target="_blank"
-              rel="noreferrer"
-              aria-label={labels.linkedinAria}
-              sx={{ color: "#F5F2EB", border: "1px solid rgba(245, 242, 235, 0.36)" }}
-            >
-              <LinkedInIcon />
             </IconButton>
           </Stack>
         </Stack>
