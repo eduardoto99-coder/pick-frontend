@@ -15,7 +15,8 @@ const sections = [
   {
     title: "Responsable y alcance",
     items: [
-      "Pick SAS, con domicilio en Colombia (Bogotá D.C.), es responsable del tratamiento. Contacto: privacy@pick.com.",
+      "Pick SAS, con domicilio en Colombia (Bogotá D.C.), es responsable del tratamiento.",
+      "Dirección: Calle 97A # 7A-24, Edificio Ego, Bogotá D.C., Colombia. Teléfono: 311 331 5304. Contacto: privacy@pick.com.",
       "Servicio dirigido a mayores de 18 años. Cubre la app web, las APIs y comunicaciones por WhatsApp/correo.",
     ],
   },
@@ -36,14 +37,17 @@ const sections = [
       "Seguridad y prevención de fraude/abuso, incluidas listas de bloqueo, moderación de contenido y límites de uso.",
       "Analítica de producto y calidad para mejorar la experiencia (optimizaciones, experimentos controlados).",
       "Comunicaciones operativas (confirmaciones, alertas de seguridad); marketing opcional y revocable.",
-      "Bases legales: ejecución del contrato, consentimiento expreso para tratamiento y transferencias internacionales, interés legítimo en seguridad/mejora y cumplimiento de obligaciones legales.",
+      "Bases legales: autorización previa, expresa e informada del titular; ejecución del contrato; y cumplimiento de obligaciones legales.",
     ],
   },
   {
     title: "Derechos Habeas Data y canales",
     items: [
       "Conocer, actualizar, rectificar, suprimir datos; solicitar prueba de autorización; ser informado sobre uso; presentar reclamos; revocar consentimiento cuando aplique.",
+      "Área responsable: Equipo de Privacidad de Pick SAS.",
+      "Procedimiento: envía tu solicitud a privacy@pick.com con nombre completo, documento de identidad, descripción de la solicitud y datos de contacto.",
       "Canal: privacy@pick.com. Consultas se responden en máximo 10 días hábiles; reclamos en máximo 15 días hábiles conforme Decreto 1377 de 2013.",
+      "Línea de contacto: 311 331 5304.",
       "Recurso ante la Superintendencia de Industria y Comercio (www.sic.gov.co) si no estás conforme con la respuesta.",
     ],
   },
@@ -70,6 +74,7 @@ const sections = [
       "Mantenemos datos de cuenta y perfil mientras uses el servicio.",
       "Logs operativos y de seguridad hasta 12 meses; copias de respaldo hasta 90 días.",
       "Tras una solicitud de eliminación borramos los datos salvo lo necesario para obligaciones legales o resolución de disputas.",
+      "Vigencia de la base de datos: durante la relación con el usuario y por el tiempo necesario para cumplir obligaciones legales o contractuales.",
     ],
   },
   {
@@ -83,7 +88,7 @@ const sections = [
     title: "Comunicaciones y marketing",
     items: [
       "Al crear la cuenta autorizas mensajes operativos por WhatsApp/correo vinculados a tus matches y seguridad.",
-      "Marketing y novedades son opcionales; puedes solicitar la baja en cualquier momento.",
+      "Marketing y novedades solo se envían con autorización previa y separada; puedes revocarla en cualquier momento.",
     ],
   },
   {
@@ -118,7 +123,7 @@ const sections = [
     title: "Actualizaciones",
     items: [
       "Publicaremos cambios relevantes y pediremos nueva aceptación cuando se requiera.",
-      `La versión vigente es ${ACTIVE_TERMS_VERSION} (última actualización ${CONTRACT_LAST_UPDATED}).`,
+      `Fecha de entrada en vigencia: ${CONTRACT_LAST_UPDATED}. Versión vigente: ${ACTIVE_TERMS_VERSION}.`,
     ],
   },
 ];

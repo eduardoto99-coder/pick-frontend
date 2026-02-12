@@ -1,5 +1,5 @@
-export const ACTIVE_TERMS_VERSION = "2025-02-privacy-v2";
-export const CONTRACT_LAST_UPDATED = "2025-02-12";
+export const ACTIVE_TERMS_VERSION = "2026-02-privacy-v3";
+export const CONTRACT_LAST_UPDATED = "2026-02-12";
 export const CONTRACT_TITLE = "Contrato de servicio y tratamiento de datos";
 
 export const CONTRACT_HIGHLIGHTS = [

@@ -205,7 +205,7 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
             component="span"
             sx={{ display: "inline", lineHeight: 1.5 }}
           >
-            Acepto el{" "}
+            Autorizo el tratamiento de mis datos personales y acepto el{" "}
             <Link
               component="button"
               type="button"

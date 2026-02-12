@@ -37,6 +37,11 @@ export default function SocialProofSection({ copy }: SocialProofSectionProps) {
             <Typography variant="body1" color="text.secondary" id={descriptionId}>
               {copy.subtitle}
             </Typography>
+            {copy.disclaimer && (
+              <Typography variant="body2" color="text.secondary">
+                {copy.disclaimer}
+              </Typography>
+            )}
           </Stack>
           <Stack
             direction={{ xs: "column", md: "row" }}
@@ -70,11 +75,6 @@ export default function SocialProofSection({ copy }: SocialProofSectionProps) {
               </Card>
             ))}
           </Stack>
-          {copy.disclaimer && (
-            <Typography variant="caption" color="text.secondary">
-              {copy.disclaimer}
-            </Typography>
-          )}
         </Stack>
       </Container>
     </Box>

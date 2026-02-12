@@ -50,10 +50,11 @@ const es: LandingDictionary = {
   },
   socialProof: {
     id: "social-proof",
-    title: "Personas reales creando colaboraciones y amistades duraderas.",
+    title: "Historias representativas de cómo se usa Pick.",
     subtitle:
-      "Emprendedores, creativos y personas que quieren socializar usan Pick para encontrar aliados con intención.",
-    disclaimer: "Historias representativas; nombres y detalles modificados.",
+      "Ejemplos ficticios basados en patrones reales de uso para mostrar el tipo de conexiones que facilita la app.",
+    disclaimer:
+      "Testimonios ficticios. Nombres, lugares y detalles modificados; no representan personas reales.",
     stories: [
       {
         quote:

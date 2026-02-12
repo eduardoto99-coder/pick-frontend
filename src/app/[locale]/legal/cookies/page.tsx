@@ -16,7 +16,8 @@ export default function CookiesPage() {
           </Typography>
           <Typography variant="body1" color="text.secondary">
             Usamos cookies esenciales para seguridad y sesión. No usamos cookies de publicidad ni
-            de terceros para rastreo en esta versión.
+            de terceros para rastreo en esta versión. Si activamos cookies no esenciales, pediremos
+            tu autorización previa.
           </Typography>
         </Stack>
 
@@ -35,12 +36,26 @@ export default function CookiesPage() {
               - Cookies necesarias: autenticación de sesión y seguridad básica para prevenir abuso.
             </Typography>
             <Typography variant="body1">
-              - Almacenamiento local: se usa únicamente para preferencias de idioma y estado de
-              sesión local durante el stub de autenticación.
+              - Almacenamiento local (localStorage): guardamos un identificador de usuario, el
+              nombre visible y una marca de perfil completo para mantener tu estado al navegar.
+              No se usa para publicidad ni seguimiento externo.
             </Typography>
             <Typography variant="body1">
-              - Cómo controlar: puedes borrar cookies en tu navegador; eliminarlas puede cerrar tu
-              sesión. Añadiremos controles adicionales cuando activemos analítica opcional.
+              - sessionStorage: se usa temporalmente para guardar el correo y datos mínimos durante
+              la confirmación de registro.
+            </Typography>
+            <Typography variant="body1">
+              - Cookies no esenciales: si activamos analítica o medición opcional, lo haremos con
+              tu autorización previa y podrás cambiar preferencias.
+            </Typography>
+            <Typography variant="body1">
+              - Cómo controlar: puedes borrar cookies y almacenamiento local en tu navegador;
+              eliminarlos puede cerrar tu sesión o borrar datos locales. Añadiremos controles
+              adicionales cuando activemos analítica opcional.
+            </Typography>
+            <Typography variant="body1">
+              - Si una cookie permite identificarte, su tratamiento se rige por nuestro aviso de
+              privacidad y el contrato de servicio.
             </Typography>
           </Stack>
         </Paper>
