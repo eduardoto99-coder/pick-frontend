@@ -1,3 +1,5 @@
+import { getAuthorizationHeaderValue } from "@/utils/local-user";
+
 export type MatchCompatibility = "perfect" | "strong" | "compatible";
 
 export type MatchIntroPreview = {
@@ -57,18 +59,11 @@ function buildHeaders(): HeadersInit {
   const headers: HeadersInit = {
     "content-type": "application/json",
   };
-  const localUserId = typeof window !== "undefined" ? getStoredUserId() : null;
-  if (localUserId) {
-    headers["x-pick-user-id"] = localUserId;
+  const authorization = getAuthorizationHeaderValue();
+  if (authorization) {
+    headers.Authorization = authorization;
   }
   return headers;
-}
-
-function appendLocalUserId(searchParams: URLSearchParams) {
-  const localUserId = typeof window !== "undefined" ? getStoredUserId() : null;
-  if (localUserId) {
-    searchParams.set("cognitoId", localUserId);
-  }
 }
 
 export async function fetchMatchRecommendations(
@@ -83,8 +78,6 @@ export async function fetchMatchRecommendations(
   const normalizedApiUrl = apiUrl.replace(/\/$/, "");
   const url = new URL(`${normalizedApiUrl}/matches`);
   url.searchParams.set("limit", String(normalizedLimit));
-
-  appendLocalUserId(url.searchParams);
 
   const response = await fetch(url.toString(), {
     method: "GET",
@@ -112,8 +105,6 @@ export async function fetchMatchDashboard(
   const normalizedApiUrl = apiUrl.replace(/\/$/, "");
   const url = new URL(`${normalizedApiUrl}/matches/dashboard`);
   url.searchParams.set("limit", String(normalizedLimit));
-
-  appendLocalUserId(url.searchParams);
 
   const response = await fetch(url.toString(), {
     method: "GET",
@@ -176,4 +167,3 @@ export async function logWhatsappClick(payload: WhatsappClickPayload): Promise<v
     throw new Error(message || "No pudimos registrar el clic de WhatsApp.");
   }
 }
-import { getStoredUserId } from "@/utils/local-user";

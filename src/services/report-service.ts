@@ -1,4 +1,4 @@
-import { getStoredUserId } from "@/utils/local-user";
+import { getAuthorizationHeaderValue } from "@/utils/local-user";
 
 export type ReportUserPayload = {
   reportedUserId: string;
@@ -8,7 +8,7 @@ export type ReportUserPayload = {
 
 export async function reportUser(payload: ReportUserPayload): Promise<{ reportedAt?: string }> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const localUserId = typeof window !== "undefined" ? getStoredUserId() : null;
+  const authorization = getAuthorizationHeaderValue();
 
   if (!apiUrl) {
     throw new Error("El servicio de reportes no está configurado.");
@@ -18,7 +18,7 @@ export async function reportUser(payload: ReportUserPayload): Promise<{ reported
     method: "POST",
     headers: {
       "content-type": "application/json",
-      ...(localUserId ? { "x-pick-user-id": localUserId } : {}),
+      ...(authorization ? { Authorization: authorization } : {}),
     },
     body: JSON.stringify(payload),
   });

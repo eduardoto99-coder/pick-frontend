@@ -3,9 +3,9 @@ import AuthCard from "@/components/auth/AuthCard";
 import SignUpForm from "@/components/auth/SignUpForm";
 
 type PageProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export const metadata: Metadata = {
@@ -13,8 +13,9 @@ export const metadata: Metadata = {
   description: "Regístrate en Pick.",
 };
 
-export default function SignUpPage({ params }: PageProps) {
-  const locale = params.locale ?? "es";
+export default async function SignUpPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale ?? "es";
 
   return (
     <AuthCard

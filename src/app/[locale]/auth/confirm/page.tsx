@@ -3,9 +3,9 @@ import AuthCard from "@/components/auth/AuthCard";
 import ConfirmSignUpForm from "@/components/auth/ConfirmSignUpForm";
 
 type PageProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export const metadata: Metadata = {
@@ -13,8 +13,9 @@ export const metadata: Metadata = {
   description: "Confirma tu cuenta de Pick con el código enviado por correo.",
 };
 
-export default function ConfirmSignUpPage({ params }: PageProps) {
-  const locale = params.locale ?? "es";
+export default async function ConfirmSignUpPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale ?? "es";
 
   return (
     <AuthCard

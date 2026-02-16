@@ -118,7 +118,6 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
           PENDING_SIGNUP_KEY,
           JSON.stringify({
             email: payload.email,
-            password: payload.password,
             displayName: payload.displayName,
           }),
         );

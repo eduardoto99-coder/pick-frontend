@@ -3,8 +3,7 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import { Alert, Button, Stack, TextField, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { confirmSignUp, loginUser } from "@/services/auth-service";
-import { useAccountLinks } from "@/hooks/use-account-links";
+import { confirmSignUp } from "@/services/auth-service";
 import { persistStoredDisplayName } from "@/utils/local-user";
 
 type FormState = {
@@ -21,7 +20,6 @@ const PENDING_SIGNUP_KEY = "pick:pending-signup";
 
 type PendingSignup = {
   email?: string;
-  password?: string;
   displayName?: string;
 };
 
@@ -48,9 +46,7 @@ export default function ConfirmSignUpForm({ locale = "es" }: { locale?: string }
   const [status, setStatus] = useState<StatusState | null>(null);
   const [isSubmitting, setSubmitting] = useState(false);
   const [email, setEmail] = useState("");
-  const [pendingPassword, setPendingPassword] = useState<string | null>(null);
   const [pendingDisplayName, setPendingDisplayName] = useState<string | null>(null);
-  const { persistSession } = useAccountLinks(locale);
   const router = useRouter();
 
   useEffect(() => {
@@ -62,17 +58,12 @@ export default function ConfirmSignUpForm({ locale = "es" }: { locale?: string }
     const pending = readPendingSignup();
     const storedEmail =
       typeof pending.email === "string" ? pending.email.trim().toLowerCase() : "";
-    const storedPassword =
-      typeof pending.password === "string" ? pending.password : null;
     const storedDisplayName =
       typeof pending.displayName === "string" ? pending.displayName.trim() : "";
 
     const resolvedEmail = emailFromQuery || storedEmail;
     if (resolvedEmail) {
       setEmail(resolvedEmail);
-    }
-    if (storedPassword) {
-      setPendingPassword(storedPassword);
     }
     if (storedDisplayName) {
       setPendingDisplayName(storedDisplayName);
@@ -123,41 +114,15 @@ export default function ConfirmSignUpForm({ locale = "es" }: { locale?: string }
         persistStoredDisplayName(pendingDisplayName);
       }
 
-      if (pendingPassword) {
-        try {
-          const loginResponse = await loginUser({
-            email: normalizedEmail,
-            password: pendingPassword,
-          });
-
-          if (!loginResponse.userId) {
-            throw new Error("No pudimos iniciar sesión automáticamente.");
-          }
-
-          persistSession(loginResponse.userId);
-          router.replace(`/${locale}/profile`);
-          return;
-        } catch (error) {
-          setStatus({
-            type: "success",
-            message:
-              error instanceof Error
-                ? `${response.message ?? "Cuenta confirmada."} ${error.message}`
-                : "Cuenta confirmada. Inicia sesión para continuar.",
-          });
-          return;
-        } finally {
-          if (typeof window !== "undefined") {
-            window.sessionStorage.removeItem(PENDING_SIGNUP_KEY);
-          }
-          setPendingPassword(null);
-        }
+      if (typeof window !== "undefined") {
+        window.sessionStorage.removeItem(PENDING_SIGNUP_KEY);
       }
 
       setStatus({
         type: "success",
         message: response.message ?? "Cuenta confirmada. Ya puedes iniciar sesión.",
       });
+      router.replace(`/${locale}/auth/sign-in?email=${encodeURIComponent(normalizedEmail)}`);
     } catch (error) {
       setStatus({
         type: "error",

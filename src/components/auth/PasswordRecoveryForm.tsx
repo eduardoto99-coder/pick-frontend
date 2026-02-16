@@ -3,24 +3,60 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Alert, Button, Stack, TextField } from "@mui/material";
 import NextLink from "next/link";
-import { requestPasswordReset } from "@/services/auth-service";
+import { confirmPasswordReset, requestPasswordReset } from "@/services/auth-service";
 
 type StatusState = {
   type: "success" | "error";
   message: string;
 };
 
+type RecoveryStep = "request" | "confirm";
+
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function PasswordRecoveryForm({ locale = "es" }: { locale?: string }) {
+  const [step, setStep] = useState<RecoveryStep>("request");
   const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [status, setStatus] = useState<StatusState | null>(null);
   const [isSubmitting, setSubmitting] = useState(false);
+
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const handleRequestCode = async () => {
+    const response = await requestPasswordReset({ email: normalizedEmail });
+    setStatus({ type: "success", message: response.message });
+    setStep("confirm");
+  };
+
+  const handleConfirmReset = async () => {
+    if (!code.trim()) {
+      setStatus({ type: "error", message: "Ingresa el código de recuperación." });
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setStatus({ type: "error", message: "La nueva contraseña debe tener mínimo 8 caracteres." });
+      return;
+    }
+
+    const response = await confirmPasswordReset({
+      email: normalizedEmail,
+      code: code.trim(),
+      newPassword,
+    });
+
+    setStatus({ type: "success", message: response.message });
+    setCode("");
+    setNewPassword("");
+    setStep("request");
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!emailRegex.test(email.trim().toLowerCase())) {
+    if (!emailRegex.test(normalizedEmail)) {
       setStatus({ type: "error", message: "Ingresa un correo válido." });
       return;
     }
@@ -29,9 +65,11 @@ export default function PasswordRecoveryForm({ locale = "es" }: { locale?: strin
     setSubmitting(true);
 
     try {
-      const response = await requestPasswordReset({ email: email.trim().toLowerCase() });
-      setStatus({ type: "success", message: response.message });
-      setEmail("");
+      if (step === "request") {
+        await handleRequestCode();
+      } else {
+        await handleConfirmReset();
+      }
     } catch (error) {
       setStatus({
         type: "error",
@@ -54,10 +92,54 @@ export default function PasswordRecoveryForm({ locale = "es" }: { locale?: strin
         required
         fullWidth
       />
+
+      {step === "confirm" ? (
+        <>
+          <TextField
+            label="Código de recuperación"
+            value={code}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => setCode(event.target.value)}
+            required
+            fullWidth
+          />
+          <TextField
+            label="Nueva contraseña"
+            type="password"
+            value={newPassword}
+            onChange={(event: ChangeEvent<HTMLInputElement>) => setNewPassword(event.target.value)}
+            required
+            fullWidth
+            helperText="Mínimo 8 caracteres."
+          />
+          <Button
+            type="button"
+            variant="text"
+            size="small"
+            onClick={() => {
+              setStep("request");
+              setCode("");
+              setNewPassword("");
+              setStatus(null);
+            }}
+            sx={{ alignSelf: "flex-start" }}
+          >
+            Solicitar un nuevo código
+          </Button>
+        </>
+      ) : null}
+
       {status ? <Alert severity={status.type}>{status.message}</Alert> : null}
+
       <Button type="submit" variant="contained" size="large" disabled={isSubmitting}>
-        {isSubmitting ? "Enviando…" : "Enviar instrucciones"}
+        {step === "request"
+          ? isSubmitting
+            ? "Enviando…"
+            : "Enviar código"
+          : isSubmitting
+            ? "Actualizando…"
+            : "Actualizar contraseña"}
       </Button>
+
       <Button
         component={NextLink}
         href={signInHref}

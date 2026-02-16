@@ -5,9 +5,9 @@ import ContractContent from "@/components/legal/ContractContent";
 import { buildContractUrl } from "@/constants/consent";
 
 type PageProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export const metadata: Metadata = {
@@ -15,8 +15,9 @@ export const metadata: Metadata = {
   description: "Cómo Pick trata tus datos personales y cuáles son tus derechos.",
 };
 
-export default function PrivacyPage({ params }: PageProps) {
-  const locale = params.locale ?? "es";
+export default async function PrivacyPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale ?? "es";
   const termsHref = buildContractUrl(locale);
 
   return (

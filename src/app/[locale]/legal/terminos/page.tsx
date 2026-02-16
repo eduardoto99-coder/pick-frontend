@@ -5,9 +5,9 @@ import ContractContent from "@/components/legal/ContractContent";
 import { ACTIVE_TERMS_VERSION, buildPrivacyUrl } from "@/constants/consent";
 
 type PageProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export const metadata: Metadata = {
@@ -16,8 +16,9 @@ export const metadata: Metadata = {
     "Términos y aviso de privacidad que rigen el uso de Pick y el tratamiento de datos personales.",
 };
 
-export default function TermsAndPrivacyPage({ params }: PageProps) {
-  const locale = params.locale ?? "es";
+export default async function TermsAndPrivacyPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale ?? "es";
   const privacyHref = buildPrivacyUrl(locale);
 
   return (

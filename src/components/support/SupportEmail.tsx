@@ -10,7 +10,7 @@ type SupportEmailProps = {
   sx?: SxProps<Theme>;
 };
 
-const mailtoHref = "mailto:help@pickglobal.com?subject=Pick%20support";
+const mailtoHref = "mailto:help@pick.com?subject=Pick%20support";
 
 export default function SupportEmail({
   locale = "es",
@@ -33,14 +33,14 @@ export default function SupportEmail({
       description: "Escríbenos y respondemos en menos de un día hábil.",
       cta: "Enviar correo",
       inlineLabel: "¿Necesitas ayuda? Escríbenos a",
-      email: "help@pickglobal.com",
+      email: "help@pick.com",
     },
     en: {
       title: "Need help?",
       description: "Email us and we'll get back within one business day.",
       cta: "Email support",
       inlineLabel: "Need help? Email",
-      email: "help@pickglobal.com",
+      email: "help@pick.com",
     },
   };
   const labels = copy[resolvedLocale];

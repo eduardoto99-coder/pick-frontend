@@ -51,6 +51,17 @@ export type PasswordResetResponse = {
   email: string;
 };
 
+export type ConfirmPasswordResetInput = {
+  email: string;
+  code: string;
+  newPassword: string;
+};
+
+export type ConfirmPasswordResetResponse = {
+  message: string;
+  email: string;
+};
+
 
 function getApiUrl(): string {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -147,12 +158,37 @@ export async function confirmSignUp(
 export async function requestPasswordReset(
   input: PasswordResetInput,
 ): Promise<PasswordResetResponse> {
-  // Placeholder until the Cognito ForgotPassword flow is available.
-  await new Promise((resolve) => setTimeout(resolve, 600));
+  const response = await fetch(`${getApiUrl()}/auth/forgot-password`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(input),
+  });
 
-  return {
-    message:
-      "Simulamos el envío del correo de recuperación. Integraremos Cognito cuando las credenciales estén listas.",
-    email: input.email,
-  } satisfies PasswordResetResponse;
+  const data = await parseResponse(response);
+  if (!response.ok) {
+    throw new Error(normalizeError(data, "No pudimos procesar la recuperación."));
+  }
+
+  return (data as PasswordResetResponse) ?? { message: "", email: input.email };
+}
+
+export async function confirmPasswordReset(
+  input: ConfirmPasswordResetInput,
+): Promise<ConfirmPasswordResetResponse> {
+  const response = await fetch(`${getApiUrl()}/auth/reset-password`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(input),
+  });
+
+  const data = await parseResponse(response);
+  if (!response.ok) {
+    throw new Error(normalizeError(data, "No pudimos restablecer la contraseña."));
+  }
+
+  return (data as ConfirmPasswordResetResponse) ?? { message: "", email: input.email };
 }

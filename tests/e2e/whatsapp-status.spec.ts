@@ -133,14 +133,21 @@ function adminConfirmUser(email: string) {
 }
 
 function adminDeleteUser(email: string) {
-  runAws([
-    "cognito-idp",
-    "admin-delete-user",
-    "--user-pool-id",
-    userPoolId,
-    "--username",
-    email,
-  ]);
+  try {
+    runAws([
+      "cognito-idp",
+      "admin-delete-user",
+      "--user-pool-id",
+      userPoolId,
+      "--username",
+      email,
+    ]);
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("UserNotFoundException")) {
+      return;
+    }
+    throw error;
+  }
 }
 
 function cleanupMongo() {
@@ -215,7 +222,8 @@ test("marks WhatsApp intros as connected", async ({ page }) => {
   await page.getByLabel(/nombre/i).fill(displayName);
   await page.getByLabel(/correo/i).fill(testEmail);
   await page.getByLabel(/contrase/i).fill(password);
-  await page.getByRole("checkbox").check();
+  await page.getByRole("checkbox", { name: /confirmo/i }).check();
+  await page.getByRole("checkbox", { name: /autorizo|contrato|acepto/i }).check();
   await page.getByRole("button", { name: /crear cuenta/i }).click();
 
   await page.waitForURL(/\/auth\/confirm/);

@@ -3,9 +3,9 @@ import AuthCard from "@/components/auth/AuthCard";
 import PasswordRecoveryForm from "@/components/auth/PasswordRecoveryForm";
 
 type PageProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export const metadata: Metadata = {
@@ -13,8 +13,9 @@ export const metadata: Metadata = {
   description: "Solicita un reinicio de contraseña.",
 };
 
-export default function PasswordRecoveryPage({ params }: PageProps) {
-  const locale = params.locale ?? "es";
+export default async function PasswordRecoveryPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale ?? "es";
 
   return (
     <AuthCard

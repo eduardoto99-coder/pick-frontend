@@ -62,7 +62,7 @@ export default function SignInForm({ locale = "es" }: { locale?: string }) {
         password: form.password,
       });
 
-      if (!response.userId) {
+      if (!response.userId || (!response.idToken && !response.accessToken)) {
         setStatus({
           type: "error",
           message: "No pudimos iniciar sesión. Intenta nuevamente.",
@@ -70,7 +70,13 @@ export default function SignInForm({ locale = "es" }: { locale?: string }) {
         return;
       }
 
-      persistSession(response.userId);
+      persistSession({
+        userId: response.userId,
+        accessToken: response.accessToken,
+        idToken: response.idToken,
+        refreshToken: response.refreshToken,
+        expiresIn: response.expiresIn,
+      });
       if (typeof response.displayName === "string" && response.displayName.trim().length > 0) {
         persistStoredDisplayName(response.displayName.trim());
       }

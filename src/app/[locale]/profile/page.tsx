@@ -6,25 +6,27 @@ import ProfileManager from "@/sections/profile/ProfileManager";
 import { getProfileCopy } from "@/sections/profile/profile-copy";
 
 type PageParams = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
-  const copy = getProfileCopy(params.locale);
+  const resolvedParams = await params;
+  const copy = getProfileCopy(resolvedParams.locale);
   return {
     title: copy.title,
     description: copy.subtitle,
   };
 }
 
-export default function ProfilePage({ params }: PageParams) {
+export default async function ProfilePage({ params }: PageParams) {
+  const resolvedParams = await params;
   return (
     <>
-      <LandingHeader locale={params.locale} />
+      <LandingHeader locale={resolvedParams.locale} />
       <Box component="main" id="main-content">
-        <ProfileManager locale={params.locale} />
+        <ProfileManager locale={resolvedParams.locale} />
       </Box>
     </>
   );

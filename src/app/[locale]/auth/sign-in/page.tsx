@@ -3,9 +3,9 @@ import AuthCard from "@/components/auth/AuthCard";
 import SignInForm from "@/components/auth/SignInForm";
 
 type PageProps = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
 export const metadata: Metadata = {
@@ -13,8 +13,9 @@ export const metadata: Metadata = {
   description: "Inicia sesión en Pick.",
 };
 
-export default function SignInPage({ params }: PageProps) {
-  const locale = params.locale ?? "es";
+export default async function SignInPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale ?? "es";
 
   return (
     <AuthCard

@@ -36,13 +36,13 @@ export default function CookiesPage() {
               - Cookies necesarias: autenticación de sesión y seguridad básica para prevenir abuso.
             </Typography>
             <Typography variant="body1">
-              - Almacenamiento local (localStorage): guardamos un identificador de usuario, el
-              nombre visible y una marca de perfil completo para mantener tu estado al navegar.
-              No se usa para publicidad ni seguimiento externo.
+              - Almacenamiento local (localStorage): guardamos tokens de sesión, identificador de
+              usuario, nombre visible y marca de perfil completo para mantener tu cuenta activa al
+              navegar. No se usa para publicidad ni seguimiento externo.
             </Typography>
             <Typography variant="body1">
-              - sessionStorage: se usa temporalmente para guardar el correo y datos mínimos durante
-              la confirmación de registro.
+              - sessionStorage: se usa temporalmente para guardar correo y nombre visible durante la
+              confirmación de registro.
             </Typography>
             <Typography variant="body1">
               - Cookies no esenciales: si activamos analítica o medición opcional, lo haremos con

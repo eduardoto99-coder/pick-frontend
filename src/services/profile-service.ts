@@ -1,5 +1,5 @@
 import type { ProfileDraft } from "@/types/profile";
-import { getStoredUserId } from "@/utils/local-user";
+import { getAuthorizationHeaderValue } from "@/utils/local-user";
 
 export type PersistedProfilePayload = {
   profile: {
@@ -12,13 +12,20 @@ export type PersistedProfilePayload = {
   };
   cities: string[];
   interests: string[];
-  cognitoId?: string;
 };
 
-export function buildProfilePayload(
-  draft: ProfileDraft,
-  cognitoId?: string,
-): PersistedProfilePayload {
+function buildAuthHeaders(): HeadersInit {
+  const headers: HeadersInit = {
+    "content-type": "application/json",
+  };
+  const authorization = getAuthorizationHeaderValue();
+  if (authorization) {
+    headers.Authorization = authorization;
+  }
+  return headers;
+}
+
+export function buildProfilePayload(draft: ProfileDraft): PersistedProfilePayload {
   const linkedinUrl = draft.linkedinUrl.trim();
   const instagramUrl = draft.instagramUrl.trim();
 
@@ -33,7 +40,6 @@ export function buildProfilePayload(
     },
     cities: draft.cities,
     interests: draft.interests,
-    ...(cognitoId ? { cognitoId } : {}),
   };
 }
 
@@ -44,8 +50,7 @@ type PersistProfileResult = {
 
 export async function persistProfile(draft: ProfileDraft): Promise<PersistProfileResult> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const localUserId = typeof window !== "undefined" ? getStoredUserId() : null;
-  const payload = buildProfilePayload(draft, localUserId || undefined);
+  const payload = buildProfilePayload(draft);
 
   if (!apiUrl) {
     throw new Error("El servicio de perfiles no está configurado.");
@@ -53,10 +58,7 @@ export async function persistProfile(draft: ProfileDraft): Promise<PersistProfil
 
   const response = await fetch(`${apiUrl}/profiles`, {
     method: "PUT",
-    headers: {
-      "content-type": "application/json",
-      ...(localUserId ? { "x-pick-user-id": localUserId } : {}),
-    },
+    headers: buildAuthHeaders(),
     body: JSON.stringify(payload),
   });
 
@@ -89,7 +91,6 @@ export type LoadedProfile = {
 
 export async function fetchProfile(): Promise<LoadedProfile | null> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const localUserId = typeof window !== "undefined" ? getStoredUserId() : null;
 
   if (!apiUrl) {
     throw new Error("El servicio de perfiles no está configurado.");
@@ -97,9 +98,7 @@ export async function fetchProfile(): Promise<LoadedProfile | null> {
 
   const response = await fetch(`${apiUrl}/profiles/me`, {
     method: "GET",
-    headers: {
-      ...(localUserId ? { "x-pick-user-id": localUserId } : {}),
-    },
+    headers: buildAuthHeaders(),
   });
 
   if (response.status === 404) {

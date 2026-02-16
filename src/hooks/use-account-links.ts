@@ -3,14 +3,17 @@
 import { useEffect, useState } from "react";
 import {
   clearProfileCompleteFlag,
+  clearStoredAuthTokens,
   clearStoredDisplayName,
   clearStoredUserId,
-  getStoredUserId,
+  getStoredBearerToken,
+  hasStoredAuthSession,
+  persistStoredAuthTokens,
   persistStoredUserId,
 } from "@/utils/local-user";
 
 export function useAccountLinks(locale = "es") {
-  const [userId, setUserId] = useState<string | null>(null);
+  const [hasAuthSession, setHasAuthSession] = useState(false);
   const [ready, setReady] = useState(false);
   const normalizedLocale = locale || "es";
 
@@ -21,32 +24,42 @@ export function useAccountLinks(locale = "es") {
 
   // Hydrate session data from local storage after mount.
   useEffect(() => {
-    const storedUserId = getStoredUserId();
-    if (storedUserId) {
+    const storedToken = getStoredBearerToken();
+    if (storedToken) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setUserId(storedUserId);
+      setHasAuthSession(hasStoredAuthSession());
     }
     setReady(true);
   }, []);
 
   return {
     ready,
-    hasSession: Boolean(userId),
+    hasSession: hasAuthSession,
     profileHref,
     matchesHref,
     signInHref,
     signUpHref,
-    accountHref: userId ? profileHref : signInHref,
-    persistSession: (nextUserId: string) => {
-      persistStoredUserId(nextUserId);
-      setUserId(nextUserId);
+    accountHref: hasAuthSession ? profileHref : signInHref,
+    persistSession: (nextSession: {
+      userId?: string;
+      accessToken?: string;
+      idToken?: string;
+      refreshToken?: string;
+      expiresIn?: number;
+    }) => {
+      persistStoredAuthTokens(nextSession);
+      if (nextSession.userId) {
+        persistStoredUserId(nextSession.userId);
+      }
+      setHasAuthSession(hasStoredAuthSession());
       setReady(true);
     },
     signOut: () => {
+      clearStoredAuthTokens();
       clearStoredUserId();
       clearStoredDisplayName();
       clearProfileCompleteFlag();
-      setUserId(null);
+      setHasAuthSession(false);
       setReady(true);
     },
   };

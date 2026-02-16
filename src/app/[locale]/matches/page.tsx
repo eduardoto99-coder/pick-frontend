@@ -1,11 +1,12 @@
 import { redirect } from "next/navigation";
 
 type PageParams = {
-  params: {
+  params: Promise<{
     locale: string;
-  };
+  }>;
 };
 
-export default function MatchesPage({ params }: PageParams) {
-  redirect(`/${params.locale}/profile`);
+export default async function MatchesPage({ params }: PageParams) {
+  const resolvedParams = await params;
+  redirect(`/${resolvedParams.locale}/profile`);
 }

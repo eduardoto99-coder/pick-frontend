@@ -4,7 +4,7 @@ export const CONTRACT_TITLE = "Contrato de servicio y tratamiento de datos";
 
 export const CONTRACT_HIGHLIGHTS = [
   "Usamos tu nombre, correo, ciudades, intereses y foto para sugerir matches y generar el mensaje de introducción por WhatsApp.",
-  "Procesamos datos en AWS (Cognito, Lambda, S3), MongoDB Atlas y un proveedor de inteligencia artificial (OpenAI o AWS Bedrock); no compartimos tu contacto con patrocinadores sin autorización.",
+  "Procesamos datos en AWS (Cognito, Lambda, S3), MongoDB Atlas y AWS Bedrock para generación de mensajes; no compartimos tu contacto con patrocinadores sin autorización.",
   "Derechos de habeas data: conocer, actualizar, rectificar o eliminar tus datos y presentar reclamos ante la SIC; contáctanos en privacy@pick.com.",
   "Pick no garantiza la calidad de cada match ni se hace responsable de encuentros fuera de la app; sigue las recomendaciones de seguridad.",
 ];

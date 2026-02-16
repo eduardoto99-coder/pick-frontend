@@ -24,7 +24,7 @@ const sections = [
     title: "Datos que recolectamos",
     items: [
       "Datos obligatorios: correo, contraseña (gestionados por Cognito) y nombre visible para tu cuenta.",
-      "Datos opcionales: número de teléfono/WhatsApp, ciudades, intereses, bio, foto de perfil (S3) y enlaces a LinkedIn/Instagram.",
+      "Datos opcionales: ciudades, intereses, bio, foto de perfil (S3) y enlaces a LinkedIn/Instagram.",
       "Información de matches: combinaciones de intereses/ciudades, códigos de match, mensaje introductorio generado por inteligencia artificial y presencia de patrocinador.",
       "Métricas de uso y seguridad: IP, dispositivo/user-agent, eventos de producto, logs y reportes de abuso.",
       "Comentarios que envíes a soporte o formularios de feedback. No solicitamos datos sensibles; no los incluyas en textos libres.",
@@ -55,7 +55,7 @@ const sections = [
     title: "Encargados y terceros",
     items: [
       "AWS (Cognito, API Gateway, Lambda, S3/CloudFront) para autenticación, ejecución y medios; MongoDB Atlas para datos operativos.",
-      "Proveedor de inteligencia artificial (OpenAI GPT-4o-mini o AWS Bedrock Claude) solo recibe nombres, intereses, ciudad y código de match; no enviamos tu teléfono y los prompts no se usan para entrenar modelos según la política actual del proveedor.",
+      "Proveedor de inteligencia artificial (AWS Bedrock) solo recibe nombres, intereses, ciudad y código de match; no enviamos teléfonos.",
       "Herramientas de analítica (Amplitude/PostHog) cuando se activen, bajo acuerdos de encargo de tratamiento.",
       "Patrocinadores solo reciben métricas agregadas; no compartimos tu contacto sin autorización explícita.",
       "WhatsApp recibe el texto del mensaje y metadatos cuando abres el deeplink para conversar.",

@@ -1,4 +1,4 @@
-import { getStoredUserId } from "@/utils/local-user";
+import { getAuthorizationHeaderValue } from "@/utils/local-user";
 import type { FeedbackOutcome } from "@/sections/matches/matches-copy";
 
 export type FeedbackEligibilityResponse = {
@@ -25,18 +25,11 @@ function buildHeaders(): HeadersInit {
   const headers: HeadersInit = {
     "content-type": "application/json",
   };
-  const localUserId = typeof window !== "undefined" ? getStoredUserId() : null;
-  if (localUserId) {
-    headers["x-pick-user-id"] = localUserId;
+  const authorization = getAuthorizationHeaderValue();
+  if (authorization) {
+    headers.Authorization = authorization;
   }
   return headers;
-}
-
-function appendLocalUserId(searchParams: URLSearchParams) {
-  const localUserId = typeof window !== "undefined" ? getStoredUserId() : null;
-  if (localUserId) {
-    searchParams.set("cognitoId", localUserId);
-  }
 }
 
 export async function fetchFeedbackEligibility(): Promise<FeedbackEligibilityResponse> {
@@ -47,7 +40,6 @@ export async function fetchFeedbackEligibility(): Promise<FeedbackEligibilityRes
 
   const normalizedApiUrl = apiUrl.replace(/\/$/, "");
   const url = new URL(`${normalizedApiUrl}/feedback/eligibility`);
-  appendLocalUserId(url.searchParams);
 
   const response = await fetch(url.toString(), {
     method: "GET",
