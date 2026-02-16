@@ -19,6 +19,11 @@ export const INTEREST_LIMIT = {
   max: 3,
 };
 
+export const DISPLAY_NAME_LIMIT = {
+  min: 3,
+  max: 80,
+};
+
 export const BIO_CHARACTER_LIMIT = {
   min: 60,
   max: 320,

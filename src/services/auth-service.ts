@@ -21,6 +21,7 @@ export type LoginResponse = {
   tokenType?: string;
   userId?: string;
   email?: string;
+  displayName?: string;
 };
 
 export type RegisterResponse = {

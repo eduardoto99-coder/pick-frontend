@@ -1,4 +1,3 @@
-import FormatQuoteRoundedIcon from "@mui/icons-material/FormatQuoteRounded";
 import {
   Box,
   Card,
@@ -34,9 +33,11 @@ export default function SocialProofSection({ copy }: SocialProofSectionProps) {
             <Typography variant="h2" id={headingId}>
               {copy.title}
             </Typography>
-            <Typography variant="body1" color="text.secondary" id={descriptionId}>
-              {copy.subtitle}
-            </Typography>
+            {copy.subtitle ? (
+              <Typography variant="body1" color="text.secondary" id={descriptionId}>
+                {copy.subtitle}
+              </Typography>
+            ) : null}
             {copy.disclaimer && (
               <Typography variant="body2" color="text.secondary">
                 {copy.disclaimer}
@@ -50,26 +51,25 @@ export default function SocialProofSection({ copy }: SocialProofSectionProps) {
           >
             {copy.stories.map((story) => (
               <Card
-                key={story.name}
+                key={story.title}
                 elevation={0}
                 sx={{
                   flex: 1,
                   border: "1px solid rgba(11, 35, 51, 0.08)",
-                  background: "#FFFFFF",
+                  background: "linear-gradient(180deg, #FFFFFF 0%, #F7FAFA 100%)",
                 }}
               >
                 <CardContent sx={{ p: { xs: 4, md: 4.5 }, height: "100%" }}>
                   <Stack spacing={2.5} height="100%">
-                    <FormatQuoteRoundedIcon color="secondary" fontSize="large" />
-                    <Typography variant="body1" color="text.primary">
-                      {story.quote}
+                    <Typography variant="h4" color="text.primary">
+                      {story.title}
                     </Typography>
-                    <Stack spacing={0.5} mt="auto">
-                      <Typography variant="subtitle1">{story.name}</Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {story.role}
-                      </Typography>
-                    </Stack>
+                    <Typography variant="body1" color="text.secondary">
+                      {story.description}
+                    </Typography>
+                    <Typography variant="subtitle2" color="text.primary" sx={{ mt: "auto" }}>
+                      {story.context}
+                    </Typography>
                   </Stack>
                 </CardContent>
               </Card>

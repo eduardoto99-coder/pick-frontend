@@ -14,7 +14,6 @@ import {
   DialogTitle,
   Container,
   Divider,
-  Link,
   Stack,
   TextField,
   Typography,
@@ -28,6 +27,8 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import InstagramIcon from "@mui/icons-material/Instagram";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@mui/material/styles";
 import {
@@ -40,6 +41,7 @@ import {
   BIO_CHARACTER_LIMIT,
   CITY_OPTIONS,
   CITY_SELECTION_LIMIT,
+  DISPLAY_NAME_LIMIT,
   INTEREST_LIMIT,
   SOCIAL_LINK_LIMIT,
 } from "@/constants/profile";
@@ -436,8 +438,26 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
   const renderStepContent = (stepId: StepId, showErrorsForStep: boolean) => {
     switch (stepId) {
       case "bio":
+        const displayNameLength = draft.displayName.trim().length;
         return (
           <Stack spacing={3}>
+            <TextField
+              label={copy.fields.nameLabel}
+              value={draft.displayName}
+              placeholder={copy.fields.namePlaceholder}
+              onChange={(event) => {
+                markProfileDirty();
+                updateField("displayName", event.target.value);
+              }}
+              fullWidth
+              error={showErrorsForStep && Boolean(validation.errors.displayName)}
+              inputProps={{ maxLength: DISPLAY_NAME_LIMIT.max }}
+              helperText={
+                showErrorsForStep && validation.errors.displayName
+                  ? validation.errors.displayName
+                  : `${displayNameLength}/${DISPLAY_NAME_LIMIT.max} ${copy.fields.bioCounterLabel}`
+              }
+            />
             <TextField
               label={copy.fields.bioLabel}
               multiline
@@ -841,31 +861,35 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
                     {match.bio}
                   </Typography>
                 ) : null}
-                {match.linkedinUrl || match.instagramUrl ? (
-                  <Stack spacing={0.5} sx={{ mt: 0.5 }}>
-                    {match.linkedinUrl ? (
-                      <Typography variant="body2" color="text.secondary">
-                        LinkedIn:{" "}
-                        {linkedinHref ? (
-                          <Link href={linkedinHref} target="_blank" rel="noopener">
-                            {match.linkedinUrl}
-                          </Link>
-                        ) : (
-                          match.linkedinUrl
-                        )}
-                      </Typography>
+                {linkedinHref || instagramHref ? (
+                  <Stack direction="row" spacing={1} sx={{ mt: 0.75 }}>
+                    {linkedinHref ? (
+                      <Button
+                        component="a"
+                        href={linkedinHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        size="small"
+                        variant="outlined"
+                        startIcon={<LinkedInIcon fontSize="small" />}
+                        aria-label={locale === "en" ? "Open LinkedIn profile" : "Abrir perfil de LinkedIn"}
+                      >
+                        LinkedIn
+                      </Button>
                     ) : null}
-                    {match.instagramUrl ? (
-                      <Typography variant="body2" color="text.secondary">
-                        Instagram:{" "}
-                        {instagramHref ? (
-                          <Link href={instagramHref} target="_blank" rel="noopener">
-                            {match.instagramUrl}
-                          </Link>
-                        ) : (
-                          match.instagramUrl
-                        )}
-                      </Typography>
+                    {instagramHref ? (
+                      <Button
+                        component="a"
+                        href={instagramHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        size="small"
+                        variant="outlined"
+                        startIcon={<InstagramIcon fontSize="small" />}
+                        aria-label={locale === "en" ? "Open Instagram profile" : "Abrir perfil de Instagram"}
+                      >
+                        Instagram
+                      </Button>
                     ) : null}
                   </Stack>
                 ) : null}

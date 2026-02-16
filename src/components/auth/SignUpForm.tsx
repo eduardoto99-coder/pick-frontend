@@ -203,7 +203,7 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
           <Typography
             variant="body2"
             component="span"
-            sx={{ display: "inline", lineHeight: 1.5 }}
+            sx={{ display: "block", lineHeight: 1.5 }}
           >
             Autorizo el tratamiento de mis datos personales y acepto el{" "}
             <Link
@@ -211,7 +211,18 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
               type="button"
               onClick={() => setShowContract(true)}
               underline="hover"
-              sx={{ fontSize: "0.875rem" }}
+              sx={{
+                fontSize: "inherit",
+                lineHeight: "inherit",
+                display: "inline",
+                p: 0,
+                m: 0,
+                border: 0,
+                backgroundColor: "transparent",
+                textAlign: "left",
+                verticalAlign: "baseline",
+                fontFamily: "inherit",
+              }}
             >
               {CONTRACT_TITLE} (v{ACTIVE_TERMS_VERSION})
             </Link>{" "}
@@ -220,7 +231,12 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
               component={NextLink}
               href={privacyHref}
               underline="hover"
-              sx={{ fontSize: "0.875rem" }}
+              sx={{
+                fontSize: "inherit",
+                lineHeight: "inherit",
+                display: "inline",
+                verticalAlign: "baseline",
+              }}
             >
               aviso de privacidad
             </Link>

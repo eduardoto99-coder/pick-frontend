@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s | Pick",
   },
   description:
-    "Pick conecta a creadores, exploradores culturales y catalizadores comunitarios con presentaciones uno a uno, handoffs por WhatsApp y seguimiento seguro.",
+    "Pick conecta a creadores, exploradores culturales y catalizadores comunitarios con presentaciones uno a uno, coordinación por WhatsApp y seguimiento seguro.",
   alternates: {
     languages: {
       es: "/es",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Pick | Introducciones uno a uno que construyen círculos duraderos",
     description:
-      "Matching por intereses, intros por WhatsApp y seguimiento seguro diseñados para conexiones uno a uno con intención.",
+      "Matching por intereses, mensajes iniciales por WhatsApp y seguimiento seguro, diseñados para conexiones uno a uno con intención.",
     type: "website",
   },
   icons: {

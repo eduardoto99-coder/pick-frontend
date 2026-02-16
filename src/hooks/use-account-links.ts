@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import {
   clearProfileCompleteFlag,
+  clearStoredDisplayName,
   clearStoredUserId,
   getStoredUserId,
   persistStoredUserId,
@@ -43,6 +44,7 @@ export function useAccountLinks(locale = "es") {
     },
     signOut: () => {
       clearStoredUserId();
+      clearStoredDisplayName();
       clearProfileCompleteFlag();
       setUserId(null);
       setReady(true);

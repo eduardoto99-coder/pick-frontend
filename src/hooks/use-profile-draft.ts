@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { DEFAULT_PROFILE_DRAFT, CITY_SELECTION_LIMIT } from "@/constants/profile";
 import { defaultLocale, isLocale } from "@/i18n/config";
 import { fetchProfile, persistProfile } from "@/services/profile-service";
-import { getStoredDisplayName } from "@/utils/local-user";
+import { getStoredDisplayName, persistStoredDisplayName } from "@/utils/local-user";
 import {
   validateProfileDraft,
   toggleInterestSelection,
@@ -47,13 +47,7 @@ function fileToDataUrl(file: File, errorMessage: string): Promise<string> {
 export function useProfileDraft(locale?: string) {
   const resolvedLocale = isLocale(locale) ? (locale as Locale) : defaultLocale;
   const messages = useMemo(() => draftMessages[resolvedLocale], [resolvedLocale]);
-  const [draft, setDraft] = useState<ProfileDraft>(() => {
-    if (typeof window === "undefined") {
-      return DEFAULT_PROFILE_DRAFT;
-    }
-    const storedName = getStoredDisplayName();
-    return storedName ? { ...DEFAULT_PROFILE_DRAFT, displayName: storedName } : DEFAULT_PROFILE_DRAFT;
-  });
+  const [draft, setDraft] = useState<ProfileDraft>(DEFAULT_PROFILE_DRAFT);
   const [status, setStatus] = useState<ProfileStatus>("idle");
   const [submitError, setSubmitError] = useState<string>();
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
@@ -119,6 +113,7 @@ export function useProfileDraft(locale?: string) {
       setStatus("saving");
       setSubmitError(undefined);
       const result = await persistProfile(draft);
+      persistStoredDisplayName(draft.displayName.trim());
       setDraft((prev) => ({
         ...prev,
         updatedAt: result.updatedAt ?? new Date().toISOString(),
@@ -145,14 +140,37 @@ export function useProfileDraft(locale?: string) {
   }, [status]);
 
   useEffect(() => {
+    const storedName = getStoredDisplayName()?.trim();
+    if (!storedName) {
+      return;
+    }
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setDraft((prev) => {
+      if (prev.displayName.trim().length > 0) {
+        return prev;
+      }
+      return {
+        ...prev,
+        displayName: storedName,
+      };
+    });
+  }, []);
+
+  useEffect(() => {
     async function loadProfile() {
       try {
         const existing = await fetchProfile();
         if (!existing) return;
 
+        const normalizedDisplayName = existing.displayName?.trim() ?? "";
+        if (normalizedDisplayName) {
+          persistStoredDisplayName(normalizedDisplayName);
+        }
+
         setDraft((prev) => ({
           ...prev,
-          displayName: existing.displayName || prev.displayName,
+          displayName: normalizedDisplayName || prev.displayName,
           bio: existing.bio || prev.bio,
           linkedinUrl: existing.linkedinUrl ?? prev.linkedinUrl,
           instagramUrl: existing.instagramUrl ?? prev.instagramUrl,

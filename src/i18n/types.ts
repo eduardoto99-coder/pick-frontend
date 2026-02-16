@@ -35,9 +35,9 @@ export type SocialProofCopy = {
   subtitle: string;
   disclaimer?: string;
   stories: Array<{
-    quote: string;
-    name: string;
-    role: string;
+    title: string;
+    description: string;
+    context: string;
   }>;
 };
 

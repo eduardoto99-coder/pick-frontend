@@ -51,29 +51,29 @@ const en: LandingDictionary = {
   },
   socialProof: {
     id: "social-proof",
-    title: "Representative stories of how Pick is used.",
+    title: "Scenarios you could live with Pick.",
     subtitle:
-      "Fictional examples based on real usage patterns to illustrate the kinds of connections the app enables.",
+      "These are not real testimonials. They are representative examples of how Pick can help by city, interest, and plan type.",
     disclaimer:
-      "Fictional testimonials. Names, places, and details are modified and do not represent real people.",
+      "Hypothetical examples inspired by real product usage patterns.",
     stories: [
       {
-        quote:
-          "Landed in Paris with zero contacts. Pick matched me with Luc, we hit a bar in Le Marais, and danced till close.",
-        name: "Carla · Content Creator",
-        role: "Paris",
+        title: "A local friend to discover Medellin",
+        description:
+          "With Pick, you could meet a local friend in Medellin to explore nightlife near Comuna 13 and get to know the city with someone who already lives it.",
+        context: "New city + tourism + nightlife",
       },
       {
-        quote:
-          "Met Sam through Pick while both scouting co-founders. We’re now building a logistics artificial intelligence startup between Madrid and São Paulo.",
-        name: "Camila · CTO in the making",
-        role: "Madrid",
+        title: "A partner for your hobby plan",
+        description:
+          "With Pick, you could find someone to play soccer with after work, lock a public field, and build a weekly plan in your city.",
+        context: "Specific interest + recurring plan",
       },
       {
-        quote:
-          "Needed a hiking buddy while working remotely in Vancouver. Pick paired me with Laura—now we tackle a new trail every Sunday morning.",
-        name: "Diego · Product Manager",
-        role: "Vancouver",
+        title: "Networking that turns into action",
+        description:
+          "With Pick, you could connect with software profiles to grab coffee, exchange ideas, and open real collaborations in the same city.",
+        context: "Networking + collaboration",
       },
     ],
   },

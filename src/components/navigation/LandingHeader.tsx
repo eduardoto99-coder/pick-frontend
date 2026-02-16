@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import PickMark from "@/components/branding/PickMark";
 import { useAccountLinks } from "@/hooks/use-account-links";
 import { defaultLocale, isLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/types";
@@ -82,17 +83,21 @@ export default function LandingHeader({ locale = "es" }: LandingHeaderProps) {
             aria-label={labels.homeAria}
             style={{ textDecoration: "none" }}
           >
-            <Typography
-              variant="h4"
-              sx={{
-                fontFamily: "var(--font-sora)",
-                fontWeight: 600,
-                letterSpacing: "-0.04em",
-                color: "primary.main",
-              }}
-            >
-              Pick
-            </Typography>
+            <Stack direction="row" spacing={0.25} alignItems="center" sx={{ color: "primary.main" }}>
+              <PickMark size={39} />
+              <Typography
+                variant="h4"
+                sx={{
+                  fontFamily: "var(--font-sora)",
+                  fontWeight: 600,
+                  letterSpacing: "-0.04em",
+                  fontSize: "1.95rem",
+                  color: "inherit",
+                }}
+              >
+                Pick
+              </Typography>
+            </Stack>
           </Link>
           <Stack
             direction={{ xs: "column", sm: "row" }}

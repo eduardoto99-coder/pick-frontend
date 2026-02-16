@@ -6,6 +6,7 @@ import NextLink from "next/link";
 import { loginUser } from "@/services/auth-service";
 import { useAccountLinks } from "@/hooks/use-account-links";
 import { useRouter } from "next/navigation";
+import { persistStoredDisplayName } from "@/utils/local-user";
 
 type FormState = {
   email: string;
@@ -70,6 +71,9 @@ export default function SignInForm({ locale = "es" }: { locale?: string }) {
       }
 
       persistSession(response.userId);
+      if (typeof response.displayName === "string" && response.displayName.trim().length > 0) {
+        persistStoredDisplayName(response.displayName.trim());
+      }
       setStatus({
         type: "success",
         message: "Inicio de sesión exitoso. Cargando tu perfil…",

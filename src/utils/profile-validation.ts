@@ -1,6 +1,7 @@
 import {
   BIO_CHARACTER_LIMIT,
   CITY_SELECTION_LIMIT,
+  DISPLAY_NAME_LIMIT,
   INTEREST_LIMIT,
   SOCIAL_LINK_LIMIT,
 } from "@/constants/profile";
@@ -11,6 +12,7 @@ import type { ProfileDraft, ProfileValidationResult } from "@/types/profile";
 const validationMessages: Record<
   Locale,
   {
+    displayName: string;
     bio: string;
     linkedin: string;
     instagram: string;
@@ -22,6 +24,7 @@ const validationMessages: Record<
   }
 > = {
   es: {
+    displayName: `El nombre visible debe tener entre ${DISPLAY_NAME_LIMIT.min} y ${DISPLAY_NAME_LIMIT.max} caracteres.`,
     bio: `Comparte entre ${BIO_CHARACTER_LIMIT.min} y ${BIO_CHARACTER_LIMIT.max} caracteres para contextualizar tus matches.`,
     linkedin: `El perfil de LinkedIn debe tener máximo ${SOCIAL_LINK_LIMIT.max} caracteres.`,
     instagram: `El perfil de Instagram debe tener máximo ${SOCIAL_LINK_LIMIT.max} caracteres.`,
@@ -32,6 +35,7 @@ const validationMessages: Record<
     interestsInvalid: "Selecciona intereses de la lista de Pick.",
   },
   en: {
+    displayName: `Display name must contain between ${DISPLAY_NAME_LIMIT.min} and ${DISPLAY_NAME_LIMIT.max} characters.`,
     bio: `Share between ${BIO_CHARACTER_LIMIT.min} and ${BIO_CHARACTER_LIMIT.max} characters to contextualize your matches.`,
     linkedin: `LinkedIn profiles must be at most ${SOCIAL_LINK_LIMIT.max} characters.`,
     instagram: `Instagram profiles must be at most ${SOCIAL_LINK_LIMIT.max} characters.`,
@@ -49,6 +53,11 @@ export function validateProfileDraft(
 ): ProfileValidationResult {
   const messages = validationMessages[locale] ?? validationMessages[defaultLocale];
   const errors: ProfileValidationResult["errors"] = {};
+
+  const displayNameLength = draft.displayName.trim().length;
+  if (displayNameLength < DISPLAY_NAME_LIMIT.min || displayNameLength > DISPLAY_NAME_LIMIT.max) {
+    errors.displayName = messages.displayName;
+  }
 
   const bioLength = draft.bio.trim().length;
   if (bioLength < BIO_CHARACTER_LIMIT.min || bioLength > BIO_CHARACTER_LIMIT.max) {

@@ -3,10 +3,11 @@ import type { LandingDictionary } from "../types";
 const es: LandingDictionary = {
   hero: {
     id: "inicio",
-    title: "Pick escribe tu intro y te conecta con quien vibra igual que tu",
-    description: "Los planes de Pick siempre se proponen en lugares públicos para interacciones seguras.",
+    title: "Conecta 1:1 en tu ciudad con personas que comparten tus intereses",
+    description:
+      "Pick no es una app de citas. Es una plataforma para amigos, planes, hobbies, colaboraciones y networking: te conecta por ciudad + interés y te deja el primer mensaje listo para WhatsApp.",
     primaryCta: {
-      label: "Empieza con Pick",
+      label: "Crear mi perfil gratis",
       href: "/app",
     },
     secondaryCta: {
@@ -14,91 +15,91 @@ const es: LandingDictionary = {
       href: "#journey",
     },
     differentiators: [
-      "Mensaje inicial generado por IA, listo para enviar",
-      "Matches activos en la ciudad que visites, gratis y sin suscripción",
-      "Cruce de intereses y horarios para moverse rápido",
+      "Pocas sugerencias, mejor curadas",
+      "Mensaje inicial listo para WhatsApp",
+      "Privacidad, seguridad y patrocinio etiquetado",
     ],
-    cardTitle: "Cómo te llevamos al encuentro",
+    cardTitle: "Así te conecta Pick en minutos",
     cardPoints: [
-      "Describe el plan y la ciudad.",
-      "Pick encuentra a quien busca lo mismo y redacta el intro automático en tu voz.",
-      "Abres el chat, envías y concretan lugar y hora en minutos.",
+      "Elige ciudad, interés y tipo de plan que quieres activar.",
+      "Pick encuentra una persona compatible y redacta un mensaje inicial claro, en tu tono.",
+      "Abres WhatsApp, editas si quieres y coordinas el plan.",
     ],
-    messagePreviewLabel: "tu mensaje automatico puede verse asi:",
+    messagePreviewLabel: "Ejemplo de mensaje automático:",
     messagePreview:
-      "Hey Ana, soy Edu. ¿Nos vemos en el rooftop de Laureles el viernes 8pm? Reservo mesa y llevo playlist; si te sirve te mando la ubicación.",
+      "Hola Juan, soy Diego. Vi que a ambos nos gusta el fútbol y estamos en Medellín. ¿Te animas a jugar un 5v5 esta semana en una cancha pública?",
   },
   journey: {
     id: "journey",
-    title: 'Tres pasos desde "¿con quién?" a a que horas nos vemos',
-    description: "Diseñado para definir el plan y conectar de verdad",
+    title: "Tres pasos para pasar de idea a plan real",
+    description: "Diseñado para reducir fricción y conectar con intención",
     steps: [
       {
-        title: "1. Di el plan",
-        description: "Selecciona ciudad y actividad (fiesta, deportes, networking, exploración).",
-      },
-      {
-        title: "2. Pick escribe y abre el intro",
+        title: "1. Define ciudad + interés + objetivo",
         description:
-          "La IA cruza intereses y horarios, elige el match y deja el mensaje automático listo para enviar.",
+          "Ejemplos: jugar fútbol, plan de jazz, networking en software, turismo local, fiesta o bienestar.",
       },
       {
-        title: "3. vive el plan y cuentanos",
-        description: "Cierren lugar y hora en el chat y comparte feedback para el próximo plan.",
+        title: "2. Pick sugiere y redacta el mensaje inicial",
+        description:
+          "La IA cruza afinidad y contexto para sugerirte una conexión 1:1 y dejar el mensaje listo.",
+      },
+      {
+        title: "3. Coordina por WhatsApp",
+        description:
+          "Edita, envía y coordina lugar y hora. Tu feedback mejora tus próximas conexiones.",
       },
     ],
   },
   socialProof: {
     id: "social-proof",
-    title: "Historias representativas de cómo se usa Pick.",
-    subtitle:
-      "Ejemplos ficticios basados en patrones reales de uso para mostrar el tipo de conexiones que facilita la app.",
-    disclaimer:
-      "Testimonios ficticios. Nombres, lugares y detalles modificados; no representan personas reales.",
+    title: "Escenarios que podrías vivir con Pick",
+    subtitle: "",
     stories: [
       {
-        quote:
-          "Llegué sola a París y quería rumba. Pick me presentó a Luc y terminamos en un bar en Le Marais bailando hasta el cierre.",
-        name: "Carla · Creadora de contenido",
-        role: "París",
+        title: "Tu amigo local para descubrir Medellín",
+        description:
+          "En Pick puedes conocer a tu amigo local en Medellín para ir de fiesta por la Comuna 13, conocer lugares auténticos y recorrer la ciudad con alguien que ya la vive.",
+        context: "Ciudad nueva + turismo + fiesta",
       },
       {
-        quote:
-          "Conocí a Sam a través de Pick; ambos queríamos lanzar un producto de inteligencia artificial para logística y ahora dirigimos una startup entre Madrid y São Paulo.",
-        name: "Camila · CTO en formación",
-        role: "Madrid",
+        title: "Compañía para activar tu hobby",
+        description:
+          "En Pick puedes encontrar a alguien con quien jugar fútbol después del trabajo, coordinar una cancha pública y sumar un nuevo plan semanal en tu ciudad.",
+        context: "Interés puntual + plan recurrente",
       },
       {
-        quote:
-          "Mientras trabajaba remoto en Vancouver buscaba alguien para planes outdoors. Pick me conectó con Laura y cada domingo exploramos un nuevo sendero.",
-        name: "Diego · Product Manager",
-        role: "Vancouver",
+        title: "Networking que sí aterriza",
+        description:
+          "En Pick puedes conectar con perfiles de software para tomarte un café, compartir ideas y abrir colaboraciones reales si están en la misma ciudad.",
+        context: "Networking + colaboración",
       },
     ],
   },
   highlights: {
     id: "destacados",
-    title: "Como pick puede conectarte con personas extraordinarias",
-    description: "IA + cuidado humano para conectar y dejarte un intro listo para enviar.",
+    title: "Para quién es Pick",
+    description:
+      "Si buscas conexiones puntuales por interés, Pick te ayuda a encontrar a la persona correcta sin ruido.",
     items: [
       {
-        title: "Planificación centrada en actividades",
+        title: "Ciudad nueva, círculo nuevo",
         description:
-          "Elige la vibra y la ciudad; coordinamos timing y afinidad para sugerirte la dupla ideal.",
+          "Cuando llegas a una ciudad y no conoces a nadie, Pick te conecta con personas que comparten tu plan.",
       },
       {
-        title: "Inteligencia artificial que desbloquea conversaciones",
+        title: "Interés específico",
         description:
-          "Recibe intros con contexto e intencion ya listos para enviar.",
+          "Si ya tienes amigos pero te falta alguien para un interés puntual (como jazz), Pick te ayuda a encontrar esa conexión.",
       },
       {
-        title: "Momentum continuo",
+        title: "Networking con intención",
         description:
-          "tus experiencias activan nuevas sugerencias para que nuevos planes sucedan",
+          "Conecta con personas afines por industria, objetivo y ciudad para conversaciones y colaboración real.",
       },
     ],
     closingCta: {
-      label: "Planifica tu próximo encuentro",
+      label: "Quiero probar Pick",
       href: "/app",
     },
   },

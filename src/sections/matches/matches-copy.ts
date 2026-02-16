@@ -65,15 +65,15 @@ export type MatchesDashboardCopy = {
 
 const copy: Record<Locale, MatchesDashboardCopy> = {
   es: {
-    title: "Dashboard de matches",
+    title: "Panel de matches",
     subtitle:
-      "Valida cada sugerencia, revisa el mensaje generado con inteligencia artificial y coordina el handoff en minutos.",
+      "Valida cada sugerencia, revisa el mensaje generado con inteligencia artificial y coordina el contacto en minutos.",
     refreshCta: "Actualizar sugerencias",
     incompleteProfileMessage:
       "Completa y guarda tu perfil para ver tus matches. Esto asegura que las recomendaciones tengan tu bio, foto, intereses y ciudades correctas.",
     incompleteCta: "Ir a mi perfil",
     status: {
-      loading: "Mapeando tus coincidencias personalizadas...",
+      loading: "Analizando tus coincidencias personalizadas...",
       empty: "Completa tu perfil con ciudades e intereses para recibir nuevos matches.",
       error: "No pudimos cargar las coincidencias. Intenta nuevamente pronto.",
       updatedPrefix: "Actualizado",
@@ -81,9 +81,9 @@ const copy: Record<Locale, MatchesDashboardCopy> = {
     card: {
       sharedCitiesLabel: "Ciudades en común",
       sharedInterestsLabel: "Intereses en común",
-      previewLabel: "Intro sugerida por inteligencia artificial",
+      previewLabel: "Mensaje inicial sugerido por inteligencia artificial",
       sponsorBadge: "Patrocinado",
-      noPreview: "No pudimos preparar un intro para este match. Refresca la sugerencia.",
+      noPreview: "No pudimos preparar un mensaje inicial para este match. Refresca la sugerencia.",
       matchCodeLabel: "Código de match",
     },
     actions: {
@@ -101,7 +101,7 @@ const copy: Record<Locale, MatchesDashboardCopy> = {
       compatible: "Compatible",
     },
     feedback: {
-      title: "¿Cómo te fue con las intros?",
+      title: "¿Cómo te fue con los mensajes iniciales?",
       description: "Cuéntanos cómo sientes los mensajes de WhatsApp para seguir afinando la experiencia.",
       milestonePrefix: "Feedback solicitado",
       milestoneLabels: {
@@ -109,8 +109,8 @@ const copy: Record<Locale, MatchesDashboardCopy> = {
         month_1: "al mes",
         month_6: "a los 6 meses",
       },
-      ratingLabel: "Calificación del mensaje (1-5)",
-      ratingHelper: "Evalúa qué tan útil/aterrizado estuvo el intro sugerido.",
+      ratingLabel: "Calificación del mensaje (1 a 5)",
+      ratingHelper: "Evalúa qué tan útil y aterrizado estuvo el mensaje sugerido.",
       outcomeLabel: "¿Qué pasó después?",
       outcomeOptions: {
         no_response: "No hubo respuesta",
