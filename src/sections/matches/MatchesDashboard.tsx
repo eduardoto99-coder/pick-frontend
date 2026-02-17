@@ -230,8 +230,13 @@ export default function MatchesDashboard({ locale }: MatchesDashboardProps) {
   };
 
   const handleIntroAction = async (matchId: string, openWhatsApp: boolean) => {
-    setIntroStatus((prev) => ({ ...prev, [matchId]: { status: "loading" } }));
     const match = matches.find((item) => item.userId === matchId);
+    if (openWhatsApp && match?.introPreview?.whatsappUrl) {
+      openWhatsAppUrl(match.introPreview.whatsappUrl);
+      return;
+    }
+
+    setIntroStatus((prev) => ({ ...prev, [matchId]: { status: "loading" } }));
     try {
       const response = await requestMatchIntro(matchId, match?.introPreview?.matchCode);
       updateMatchPreview(matchId, response);

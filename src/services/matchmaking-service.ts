@@ -54,6 +54,11 @@ export type WhatsappClickPayload = {
 };
 
 const DEFAULT_LIMIT = 5;
+type ApiErrorPayload = {
+  code?: string;
+  message?: string;
+  retryAfterSeconds?: number;
+};
 
 function buildHeaders(): HeadersInit {
   const headers: HeadersInit = {
@@ -64,6 +69,52 @@ function buildHeaders(): HeadersInit {
     headers.Authorization = authorization;
   }
   return headers;
+}
+
+async function parseResponse(response: Response): Promise<unknown> {
+  const text = await response.text();
+  if (!text) {
+    return undefined;
+  }
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+}
+
+function formatRetryAfter(seconds: number): string {
+  const safeSeconds = Math.max(1, Math.ceil(seconds));
+  const minutes = Math.floor(safeSeconds / 60);
+  const remainingSeconds = safeSeconds % 60;
+
+  if (minutes <= 0) {
+    return `${remainingSeconds}s`;
+  }
+  if (remainingSeconds === 0) {
+    return `${minutes} min`;
+  }
+  return `${minutes} min ${remainingSeconds}s`;
+}
+
+function normalizeError(payload: unknown, fallback: string): string {
+  if (typeof payload === "string" && payload.trim().length > 0) {
+    return payload;
+  }
+
+  if (payload && typeof payload === "object") {
+    const record = payload as ApiErrorPayload;
+    if (record.code === "rate_limited" && typeof record.retryAfterSeconds === "number") {
+      return `Demasiados intentos por ahora. Intenta nuevamente en ${formatRetryAfter(
+        record.retryAfterSeconds,
+      )}.`;
+    }
+    if (typeof record.message === "string" && record.message.trim().length > 0) {
+      return record.message;
+    }
+  }
+
+  return fallback;
 }
 
 export async function fetchMatchRecommendations(
@@ -85,11 +136,11 @@ export async function fetchMatchRecommendations(
   });
 
   if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || "No se pudo obtener la lista de coincidencias.");
+    const payload = await parseResponse(response);
+    throw new Error(normalizeError(payload, "No se pudo obtener la lista de coincidencias."));
   }
 
-  const json = await response.json();
+  const json = (await parseResponse(response)) as Record<string, unknown> | undefined;
   return Array.isArray(json?.matches) ? (json.matches as MatchRecommendation[]) : [];
 }
 
@@ -112,11 +163,11 @@ export async function fetchMatchDashboard(
   });
 
   if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || "No pudimos preparar el dashboard de matches.");
+    const payload = await parseResponse(response);
+    throw new Error(normalizeError(payload, "No pudimos preparar el dashboard de matches."));
   }
 
-  const json = await response.json();
+  const json = (await parseResponse(response)) as Record<string, unknown> | undefined;
   return Array.isArray(json?.matches) ? (json.matches as MatchRecommendation[]) : [];
 }
 
@@ -142,11 +193,11 @@ export async function requestMatchIntro(
   });
 
   if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || "No pudimos crear el mensaje.");
+    const responsePayload = await parseResponse(response);
+    throw new Error(normalizeError(responsePayload, "No pudimos crear el mensaje."));
   }
 
-  return (await response.json()) as MatchIntroResponse;
+  return (await parseResponse(response)) as MatchIntroResponse;
 }
 
 export async function logWhatsappClick(payload: WhatsappClickPayload): Promise<void> {
@@ -163,7 +214,7 @@ export async function logWhatsappClick(payload: WhatsappClickPayload): Promise<v
   });
 
   if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || "No pudimos registrar el clic de WhatsApp.");
+    const responsePayload = await parseResponse(response);
+    throw new Error(normalizeError(responsePayload, "No pudimos registrar el clic de WhatsApp."));
   }
 }
