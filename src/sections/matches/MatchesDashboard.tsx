@@ -28,7 +28,11 @@ import {
   type MatchRecommendation,
 } from "@/services/matchmaking-service";
 import { fetchInterests } from "@/services/interest-service";
-import { openWhatsAppUrl } from "@/utils/whatsapp";
+import {
+  closePreparedWhatsAppOpen,
+  openWhatsAppUrl,
+  prepareWhatsAppOpen,
+} from "@/utils/whatsapp";
 import { getMatchesCopy } from "./matches-copy";
 import { isProfileMarkedComplete } from "@/utils/local-user";
 import {
@@ -230,9 +234,10 @@ export default function MatchesDashboard({ locale }: MatchesDashboardProps) {
   };
 
   const handleIntroAction = async (matchId: string, openWhatsApp: boolean) => {
+    const preparedWhatsAppOpen = openWhatsApp ? prepareWhatsAppOpen() : null;
     const match = matches.find((item) => item.userId === matchId);
     if (openWhatsApp && match?.introPreview?.whatsappUrl) {
-      openWhatsAppUrl(match.introPreview.whatsappUrl);
+      openWhatsAppUrl(match.introPreview.whatsappUrl, preparedWhatsAppOpen);
       return;
     }
 
@@ -242,9 +247,10 @@ export default function MatchesDashboard({ locale }: MatchesDashboardProps) {
       updateMatchPreview(matchId, response);
       setIntroStatus((prev) => ({ ...prev, [matchId]: { status: "idle" } }));
       if (openWhatsApp && typeof window !== "undefined") {
-        openWhatsAppUrl(response.whatsappUrl);
+        openWhatsAppUrl(response.whatsappUrl, preparedWhatsAppOpen);
       }
     } catch (err) {
+      closePreparedWhatsAppOpen(preparedWhatsAppOpen);
       setIntroStatus((prev) => ({
         ...prev,
         [matchId]: {

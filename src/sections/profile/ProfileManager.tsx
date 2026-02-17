@@ -59,7 +59,11 @@ import {
 } from "@/services/matchmaking-service";
 import { reportUser } from "@/services/report-service";
 import { fetchInterests, resolveInterestLabel, type InterestOption } from "@/services/interest-service";
-import { openWhatsAppUrl } from "@/utils/whatsapp";
+import {
+  closePreparedWhatsAppOpen,
+  openWhatsAppUrl,
+  prepareWhatsAppOpen,
+} from "@/utils/whatsapp";
 
 type ProfileManagerProps = {
   locale?: string;
@@ -321,13 +325,14 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
   }, [canViewMatches, copy.matches.error, hasSession, sessionReady]);
 
   const handleMatchIntro = async (matchId: string) => {
+    const preparedWhatsAppOpen = prepareWhatsAppOpen();
     setIntroStatus((prev) => ({
       ...prev,
       [matchId]: { status: "loading" },
     }));
     try {
       const intro = await requestMatchIntro(matchId);
-      openWhatsAppUrl(intro.whatsappUrl);
+      openWhatsAppUrl(intro.whatsappUrl, preparedWhatsAppOpen);
       logWhatsappClick({
         partnerId: matchId,
         matchCode: intro.matchCode,
@@ -348,6 +353,7 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
         [matchId]: { status: "idle" },
       }));
     } catch (error) {
+      closePreparedWhatsAppOpen(preparedWhatsAppOpen);
       setIntroStatus((prev) => ({
         ...prev,
         [matchId]: {

@@ -4,6 +4,16 @@ const WHATSAPP_OPEN_DEBOUNCE_MS = 1200;
 let lastOpenedUrl = "";
 let lastOpenedAt = 0;
 
+export type PreparedWhatsAppOpen = {
+  isMobile: boolean;
+  popup: Window | null;
+};
+
+function isMobileClient() {
+  const userAgent = window.navigator.userAgent ?? "";
+  return mobileUserAgentPattern.test(userAgent);
+}
+
 function buildDesktopWhatsappUrl(rawUrl: string): string {
   try {
     const source = new URL(rawUrl);
@@ -32,29 +42,52 @@ function buildDesktopWhatsappUrl(rawUrl: string): string {
   }
 }
 
-export function openWhatsAppUrl(url: string) {
+export function prepareWhatsAppOpen(): PreparedWhatsAppOpen | null {
   if (typeof window === "undefined") {
-    return;
+    return null;
   }
 
-  const now = Date.now();
-  if (url === lastOpenedUrl && now - lastOpenedAt < WHATSAPP_OPEN_DEBOUNCE_MS) {
+  if (isMobileClient()) {
+    return { isMobile: true, popup: null };
+  }
+
+  const popup = window.open("", "_blank", "noopener,noreferrer");
+  return { isMobile: false, popup };
+}
+
+export function closePreparedWhatsAppOpen(prepared: PreparedWhatsAppOpen | null | undefined) {
+  if (!prepared || prepared.isMobile) {
     return;
   }
-  lastOpenedUrl = url;
-  lastOpenedAt = now;
+  if (prepared.popup && !prepared.popup.closed) {
+    prepared.popup.close();
+  }
+}
 
-  const userAgent = window.navigator.userAgent ?? "";
-  const isMobile = mobileUserAgentPattern.test(userAgent);
+export function openWhatsAppUrl(url: string, prepared?: PreparedWhatsAppOpen | null): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  const isMobile = prepared?.isMobile ?? isMobileClient();
   const targetUrl = isMobile ? url : buildDesktopWhatsappUrl(url);
+  const now = Date.now();
+  if (targetUrl === lastOpenedUrl && now - lastOpenedAt < WHATSAPP_OPEN_DEBOUNCE_MS) {
+    return false;
+  }
+  lastOpenedUrl = targetUrl;
+  lastOpenedAt = now;
 
   if (isMobile) {
     window.location.assign(targetUrl);
-    return;
+    return true;
+  }
+
+  if (prepared?.popup && !prepared.popup.closed) {
+    prepared.popup.location.href = targetUrl;
+    return true;
   }
 
   const popup = window.open(targetUrl, "_blank", "noopener,noreferrer");
-  if (!popup) {
-    window.location.assign(targetUrl);
-  }
+  return Boolean(popup);
 }
