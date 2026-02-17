@@ -20,12 +20,12 @@ export default function PickMark({ size = 28, className }: PickMarkProps) {
       />
       <text
         x="128"
-        y="126"
+        y="145"
         fill="#FFFFFF"
         textAnchor="middle"
         dominantBaseline="middle"
         fontFamily='var(--font-sora), "Sora", "Inter", sans-serif'
-        fontSize="108"
+        fontSize="119"
         fontWeight="600"
         letterSpacing="-0.04em"
       >
