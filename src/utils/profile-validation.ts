@@ -4,6 +4,7 @@ import {
   DISPLAY_NAME_LIMIT,
   INTEREST_LIMIT,
   SOCIAL_LINK_LIMIT,
+  WHATSAPP_NUMBER_LIMIT,
 } from "@/constants/profile";
 import { defaultLocale } from "@/i18n/config";
 import type { Locale } from "@/i18n/types";
@@ -14,6 +15,7 @@ const validationMessages: Record<
   {
     displayName: string;
     bio: string;
+    whatsappNumber: string;
     linkedin: string;
     instagram: string;
     photo: string;
@@ -26,6 +28,8 @@ const validationMessages: Record<
   es: {
     displayName: `El nombre visible debe tener entre ${DISPLAY_NAME_LIMIT.min} y ${DISPLAY_NAME_LIMIT.max} caracteres.`,
     bio: `Comparte entre ${BIO_CHARACTER_LIMIT.min} y ${BIO_CHARACTER_LIMIT.max} caracteres para contextualizar tus matches.`,
+    whatsappNumber:
+      "Escribe un número de WhatsApp válido en formato internacional, por ejemplo +573001234567.",
     linkedin: `El perfil de LinkedIn debe tener máximo ${SOCIAL_LINK_LIMIT.max} caracteres.`,
     instagram: `El perfil de Instagram debe tener máximo ${SOCIAL_LINK_LIMIT.max} caracteres.`,
     photo: "Sube una foto clara para reforzar confianza.",
@@ -37,6 +41,8 @@ const validationMessages: Record<
   en: {
     displayName: `Display name must contain between ${DISPLAY_NAME_LIMIT.min} and ${DISPLAY_NAME_LIMIT.max} characters.`,
     bio: `Share between ${BIO_CHARACTER_LIMIT.min} and ${BIO_CHARACTER_LIMIT.max} characters to contextualize your matches.`,
+    whatsappNumber:
+      "Enter a valid WhatsApp number in international format, for example +573001234567.",
     linkedin: `LinkedIn profiles must be at most ${SOCIAL_LINK_LIMIT.max} characters.`,
     instagram: `Instagram profiles must be at most ${SOCIAL_LINK_LIMIT.max} characters.`,
     photo: "Upload a clear photo to build trust.",
@@ -62,6 +68,17 @@ export function validateProfileDraft(
   const bioLength = draft.bio.trim().length;
   if (bioLength < BIO_CHARACTER_LIMIT.min || bioLength > BIO_CHARACTER_LIMIT.max) {
     errors.bio = messages.bio;
+  }
+
+  const whatsappRaw = draft.whatsappNumber.trim();
+  if (whatsappRaw.length > WHATSAPP_NUMBER_LIMIT.max) {
+    errors.whatsappNumber = messages.whatsappNumber;
+  } else if (whatsappRaw.length > 0) {
+    const digitCount = whatsappRaw.replace(/\D/g, "").length;
+    const validShape = /^\+?[0-9()\-\s]+$/.test(whatsappRaw);
+    if (!validShape || digitCount < 8 || digitCount > 15) {
+      errors.whatsappNumber = messages.whatsappNumber;
+    }
   }
 
   const linkedinLength = draft.linkedinUrl.trim().length;

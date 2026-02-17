@@ -12,6 +12,8 @@ export type ProfileCopy = {
     bioLabel: string;
     bioPlaceholder: string;
     bioCounterLabel: string;
+    whatsappLabel: string;
+    whatsappPlaceholder: string;
     linkedinLabel: string;
     linkedinPlaceholder: string;
     instagramLabel: string;
@@ -100,11 +102,13 @@ const copy: Record<Locale, ProfileCopy> = {
       bioLabel: "Bio",
       bioPlaceholder: "Qué proyectos lideras, qué buscas y qué te entusiasma en esta etapa.",
       bioCounterLabel: "caracteres",
+      whatsappLabel: "WhatsApp (opcional)",
+      whatsappPlaceholder: "Ej. +573001234567",
       linkedinLabel: "LinkedIn (opcional)",
       linkedinPlaceholder: "Ej. https://www.linkedin.com/in/tuusuario",
       instagramLabel: "Instagram (opcional)",
       instagramPlaceholder: "Ej. https://instagram.com/tuusuario",
-      socialHelper: "",
+      socialHelper: "Si agregas tu WhatsApp, Pick puede abrir el chat directo con tu match.",
       interestsLabel: "Buscar intereses",
       interestsPlaceholder: "Escribe para buscar o crear uno personalizado",
       citiesLabel: "Ciudades",
@@ -192,11 +196,13 @@ const copy: Record<Locale, ProfileCopy> = {
       bioLabel: "Bio",
       bioPlaceholder: "Share what you’re building, looking for, and excited about right now.",
       bioCounterLabel: "characters",
+      whatsappLabel: "WhatsApp (optional)",
+      whatsappPlaceholder: "e.g., +573001234567",
       linkedinLabel: "LinkedIn (optional)",
       linkedinPlaceholder: "e.g., https://www.linkedin.com/in/yourhandle",
       instagramLabel: "Instagram (optional)",
       instagramPlaceholder: "e.g., https://instagram.com/yourhandle",
-      socialHelper: "",
+      socialHelper: "If you add WhatsApp, Pick can open a direct chat with your match.",
       interestsLabel: "Search interests",
       interestsPlaceholder: "Type to search or create a custom one",
       citiesLabel: "Cities",

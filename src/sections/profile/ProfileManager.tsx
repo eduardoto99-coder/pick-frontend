@@ -44,6 +44,7 @@ import {
   DISPLAY_NAME_LIMIT,
   INTEREST_LIMIT,
   SOCIAL_LINK_LIMIT,
+  WHATSAPP_NUMBER_LIMIT,
 } from "@/constants/profile";
 import { useProfileDraft } from "@/hooks/use-profile-draft";
 import { useAccountLinks } from "@/hooks/use-account-links";
@@ -482,9 +483,27 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
         return (
           <Stack spacing={0}>
             <TextField
+              label={copy.fields.whatsappLabel}
+              value={draft.whatsappNumber}
+              placeholder={copy.fields.whatsappPlaceholder}
+              onChange={(event) => {
+                markProfileDirty();
+                updateField("whatsappNumber", event.target.value);
+              }}
+              fullWidth
+              error={showErrorsForStep && Boolean(validation.errors.whatsappNumber)}
+              inputProps={{ maxLength: WHATSAPP_NUMBER_LIMIT.max }}
+              helperText={
+                showErrorsForStep && validation.errors.whatsappNumber
+                  ? validation.errors.whatsappNumber
+                  : socialHelper || undefined
+              }
+            />
+            <TextField
               label={copy.fields.linkedinLabel}
               value={draft.linkedinUrl}
               placeholder={copy.fields.linkedinPlaceholder}
+              sx={{ mt: "1cm" }}
               onChange={(event) => {
                 markProfileDirty();
                 updateField("linkedinUrl", event.target.value);

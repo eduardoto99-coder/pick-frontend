@@ -8,6 +8,7 @@ export type ProfilePhoto = {
 export type ProfileDraft = {
   displayName: string;
   bio: string;
+  whatsappNumber: string;
   linkedinUrl: string;
   instagramUrl: string;
   cities: string[];
@@ -20,6 +21,7 @@ export type ProfileDraft = {
 export type ProfileValidationErrors = {
   displayName?: string;
   bio?: string;
+  whatsappNumber?: string;
   linkedinUrl?: string;
   instagramUrl?: string;
   photo?: string;

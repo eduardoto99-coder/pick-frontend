@@ -172,6 +172,7 @@ export function useProfileDraft(locale?: string) {
           ...prev,
           displayName: normalizedDisplayName || prev.displayName,
           bio: existing.bio || prev.bio,
+          whatsappNumber: existing.whatsappNumber ?? prev.whatsappNumber,
           linkedinUrl: existing.linkedinUrl ?? prev.linkedinUrl,
           instagramUrl: existing.instagramUrl ?? prev.instagramUrl,
           cities: existing.cities ?? [],

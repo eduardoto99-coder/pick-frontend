@@ -5,6 +5,7 @@ export type PersistedProfilePayload = {
   profile: {
     displayName: string;
     bio: string;
+    whatsappNumber?: string;
     linkedinUrl?: string;
     instagramUrl?: string;
     photoDataUrl?: string;
@@ -26,6 +27,7 @@ function buildAuthHeaders(): HeadersInit {
 }
 
 export function buildProfilePayload(draft: ProfileDraft): PersistedProfilePayload {
+  const whatsappNumber = draft.whatsappNumber.trim();
   const linkedinUrl = draft.linkedinUrl.trim();
   const instagramUrl = draft.instagramUrl.trim();
 
@@ -33,6 +35,7 @@ export function buildProfilePayload(draft: ProfileDraft): PersistedProfilePayloa
     profile: {
       displayName: draft.displayName.trim(),
       bio: draft.bio.trim(),
+      whatsappNumber: whatsappNumber.length > 0 ? whatsappNumber : undefined,
       linkedinUrl: linkedinUrl.length > 0 ? linkedinUrl : undefined,
       instagramUrl: instagramUrl.length > 0 ? instagramUrl : undefined,
       photoDataUrl: draft.photo?.dataUrl,
@@ -81,6 +84,7 @@ export async function persistProfile(draft: ProfileDraft): Promise<PersistProfil
 export type LoadedProfile = {
   displayName: string;
   bio: string;
+  whatsappNumber?: string;
   linkedinUrl?: string;
   instagramUrl?: string;
   cities: string[];
@@ -118,6 +122,8 @@ export async function fetchProfile(): Promise<LoadedProfile | null> {
   return {
     displayName: json.profile.displayName ?? "",
     bio: json.profile.bio ?? "",
+    whatsappNumber:
+      typeof json.profile.whatsappNumber === "string" ? json.profile.whatsappNumber : undefined,
     linkedinUrl:
       typeof json.profile.linkedinUrl === "string" ? json.profile.linkedinUrl : undefined,
     instagramUrl:

@@ -38,6 +38,10 @@ export const SOCIAL_LINK_LIMIT = {
   max: 160,
 };
 
+export const WHATSAPP_NUMBER_LIMIT = {
+  max: 24,
+};
+
 export const INTEREST_OPTIONS: InterestOption[] = [
   {
     id: "climate_action",
@@ -159,6 +163,7 @@ export const CITY_OPTIONS: CityOption[] = [
 export const DEFAULT_PROFILE_DRAFT: ProfileDraft = {
   displayName: "",
   bio: "",
+  whatsappNumber: "",
   linkedinUrl: "",
   instagramUrl: "",
   cities: [],
