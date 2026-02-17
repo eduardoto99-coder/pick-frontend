@@ -17,20 +17,36 @@ function isMobileClient() {
 function buildDesktopWhatsappUrl(rawUrl: string): string {
   try {
     const source = new URL(rawUrl);
-    const isWaHost = source.hostname === "wa.me" || source.hostname === "api.whatsapp.com";
+    const host = source.hostname.replace(/^www\./, "");
+    const isWaHost =
+      host === "wa.me" || host === "api.whatsapp.com" || host === "web.whatsapp.com";
     if (!isWaHost) {
       return rawUrl;
     }
 
-    const phoneFromPath = source.pathname.replace(/\//g, "").trim();
+    let phone = "";
+    const phoneFromQuery =
+      source.searchParams.get("phone") ??
+      source.searchParams.get("phoneNumber") ??
+      source.searchParams.get("recipient") ??
+      "";
+    if (host === "wa.me") {
+      phone = source.pathname.replace(/\//g, "").trim().replace(/\D/g, "");
+      if (!phone) {
+        phone = phoneFromQuery.replace(/\D/g, "");
+      }
+    } else {
+      phone = phoneFromQuery.replace(/\D/g, "");
+    }
+
     const text =
       source.searchParams.get("text") ??
       source.searchParams.get("message") ??
       "";
 
     const desktopUrl = new URL("https://web.whatsapp.com/send");
-    if (phoneFromPath) {
-      desktopUrl.searchParams.set("phone", phoneFromPath);
+    if (phone) {
+      desktopUrl.searchParams.set("phone", phone);
     }
     if (text) {
       desktopUrl.searchParams.set("text", text);
@@ -51,7 +67,7 @@ export function prepareWhatsAppOpen(): PreparedWhatsAppOpen | null {
     return { isMobile: true, popup: null };
   }
 
-  const popup = window.open("", "_blank", "noopener,noreferrer");
+  const popup = window.open("", "_blank");
   return { isMobile: false, popup };
 }
 
@@ -84,8 +100,13 @@ export function openWhatsAppUrl(url: string, prepared?: PreparedWhatsAppOpen | n
   }
 
   if (prepared?.popup && !prepared.popup.closed) {
-    prepared.popup.location.href = targetUrl;
-    return true;
+    try {
+      prepared.popup.opener = null;
+      prepared.popup.location.href = targetUrl;
+      return true;
+    } catch {
+      prepared.popup.close();
+    }
   }
 
   const popup = window.open(targetUrl, "_blank", "noopener,noreferrer");

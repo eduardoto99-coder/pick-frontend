@@ -332,7 +332,10 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
     }));
     try {
       const intro = await requestMatchIntro(matchId);
-      openWhatsAppUrl(intro.whatsappUrl, preparedWhatsAppOpen);
+      const opened = openWhatsAppUrl(intro.whatsappUrl, preparedWhatsAppOpen);
+      if (!opened) {
+        closePreparedWhatsAppOpen(preparedWhatsAppOpen);
+      }
       logWhatsappClick({
         partnerId: matchId,
         matchCode: intro.matchCode,

@@ -237,7 +237,10 @@ export default function MatchesDashboard({ locale }: MatchesDashboardProps) {
     const preparedWhatsAppOpen = openWhatsApp ? prepareWhatsAppOpen() : null;
     const match = matches.find((item) => item.userId === matchId);
     if (openWhatsApp && match?.introPreview?.whatsappUrl) {
-      openWhatsAppUrl(match.introPreview.whatsappUrl, preparedWhatsAppOpen);
+      const opened = openWhatsAppUrl(match.introPreview.whatsappUrl, preparedWhatsAppOpen);
+      if (!opened) {
+        closePreparedWhatsAppOpen(preparedWhatsAppOpen);
+      }
       return;
     }
 
@@ -247,7 +250,10 @@ export default function MatchesDashboard({ locale }: MatchesDashboardProps) {
       updateMatchPreview(matchId, response);
       setIntroStatus((prev) => ({ ...prev, [matchId]: { status: "idle" } }));
       if (openWhatsApp && typeof window !== "undefined") {
-        openWhatsAppUrl(response.whatsappUrl, preparedWhatsAppOpen);
+        const opened = openWhatsAppUrl(response.whatsappUrl, preparedWhatsAppOpen);
+        if (!opened) {
+          closePreparedWhatsAppOpen(preparedWhatsAppOpen);
+        }
       }
     } catch (err) {
       closePreparedWhatsAppOpen(preparedWhatsAppOpen);
