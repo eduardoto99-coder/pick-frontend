@@ -1,3 +1,5 @@
+import { getAuthorizationHeaderValue } from "@/utils/local-user";
+
 export type InterestOption = {
   id: string;
   label: string;
@@ -13,9 +15,14 @@ export type ResolveInterestResponse = {
 };
 
 function buildHeaders(): HeadersInit {
-  return {
+  const headers: HeadersInit = {
     "content-type": "application/json",
   };
+  const authorization = getAuthorizationHeaderValue();
+  if (authorization) {
+    headers.Authorization = authorization;
+  }
+  return headers;
 }
 
 export async function fetchInterests(query?: string): Promise<InterestOption[]> {
