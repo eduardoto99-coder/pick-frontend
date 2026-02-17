@@ -28,6 +28,7 @@ import {
   type MatchRecommendation,
 } from "@/services/matchmaking-service";
 import { fetchInterests } from "@/services/interest-service";
+import { openWhatsAppUrl } from "@/utils/whatsapp";
 import { getMatchesCopy } from "./matches-copy";
 import { isProfileMarkedComplete } from "@/utils/local-user";
 import {
@@ -236,7 +237,7 @@ export default function MatchesDashboard({ locale }: MatchesDashboardProps) {
       updateMatchPreview(matchId, response);
       setIntroStatus((prev) => ({ ...prev, [matchId]: { status: "idle" } }));
       if (openWhatsApp && typeof window !== "undefined") {
-        window.open(response.whatsappUrl, "_blank", "noopener");
+        openWhatsAppUrl(response.whatsappUrl);
       }
     } catch (err) {
       setIntroStatus((prev) => ({

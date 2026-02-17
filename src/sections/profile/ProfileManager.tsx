@@ -56,6 +56,7 @@ import {
 } from "@/services/matchmaking-service";
 import { reportUser } from "@/services/report-service";
 import { fetchInterests, resolveInterestLabel, type InterestOption } from "@/services/interest-service";
+import { openWhatsAppUrl } from "@/utils/whatsapp";
 
 type ProfileManagerProps = {
   locale?: string;
@@ -271,9 +272,7 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
     }));
     try {
       const intro = await requestMatchIntro(matchId);
-      if (typeof window !== "undefined") {
-        window.open(intro.whatsappUrl, "_blank", "noopener");
-      }
+      openWhatsAppUrl(intro.whatsappUrl);
       logWhatsappClick({
         partnerId: matchId,
         matchCode: intro.matchCode,
