@@ -20,7 +20,7 @@ export default function PickMark({ size = 28, className }: PickMarkProps) {
       />
       <text
         x="128"
-        y="145"
+        y="138"
         fill="#FFFFFF"
         textAnchor="middle"
         dominantBaseline="middle"
