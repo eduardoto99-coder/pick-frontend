@@ -40,7 +40,32 @@ export const SOCIAL_LINK_LIMIT = {
 
 export const WHATSAPP_NUMBER_LIMIT = {
   max: 24,
+  minDigits: 8,
+  maxDigits: 15,
+  localMax: 15,
 };
+
+export type WhatsappCountryCodeOption = {
+  code: string;
+  label: string;
+};
+
+export const WHATSAPP_COUNTRY_CODE_OPTIONS: WhatsappCountryCodeOption[] = [
+  { code: "+57", label: "Colombia (+57)" },
+  { code: "+1", label: "USA/Canada (+1)" },
+  { code: "+52", label: "Mexico (+52)" },
+  { code: "+54", label: "Argentina (+54)" },
+  { code: "+56", label: "Chile (+56)" },
+  { code: "+51", label: "Peru (+51)" },
+  { code: "+58", label: "Venezuela (+58)" },
+  { code: "+593", label: "Ecuador (+593)" },
+  { code: "+591", label: "Bolivia (+591)" },
+  { code: "+595", label: "Paraguay (+595)" },
+  { code: "+598", label: "Uruguay (+598)" },
+  { code: "+507", label: "Panama (+507)" },
+  { code: "+506", label: "Costa Rica (+506)" },
+  { code: "+34", label: "Espana (+34)" },
+];
 
 export const INTEREST_OPTIONS: InterestOption[] = [
   {

@@ -14,6 +14,7 @@ import {
   DialogTitle,
   Container,
   Divider,
+  MenuItem,
   Stack,
   TextField,
   Typography,
@@ -44,6 +45,7 @@ import {
   DISPLAY_NAME_LIMIT,
   INTEREST_LIMIT,
   SOCIAL_LINK_LIMIT,
+  WHATSAPP_COUNTRY_CODE_OPTIONS,
   WHATSAPP_NUMBER_LIMIT,
 } from "@/constants/profile";
 import { useProfileDraft } from "@/hooks/use-profile-draft";
@@ -74,6 +76,50 @@ type CustomInterestOption = {
 type InterestAutocompleteOption = InterestOption | CustomInterestOption;
 
 const STEP_IDS: StepId[] = ["bio", "photo", "interests", "social", "locations"];
+const DEFAULT_WHATSAPP_COUNTRY_CODE = WHATSAPP_COUNTRY_CODE_OPTIONS[0]?.code ?? "+57";
+
+function digitsOnly(value: string): string {
+  return value.replace(/\D/g, "");
+}
+
+function resolveWhatsappCountryCode(fullValue: string): string {
+  const digits = digitsOnly(fullValue);
+  if (!digits) {
+    return DEFAULT_WHATSAPP_COUNTRY_CODE;
+  }
+
+  let selectedCode = DEFAULT_WHATSAPP_COUNTRY_CODE;
+  let maxPrefixDigits = 0;
+  for (const option of WHATSAPP_COUNTRY_CODE_OPTIONS) {
+    const codeDigits = digitsOnly(option.code);
+    if (digits.startsWith(codeDigits) && codeDigits.length > maxPrefixDigits) {
+      selectedCode = option.code;
+      maxPrefixDigits = codeDigits.length;
+    }
+  }
+
+  return selectedCode;
+}
+
+function extractWhatsappLocalNumber(fullValue: string, countryCode: string): string {
+  const digits = digitsOnly(fullValue);
+  if (!digits) {
+    return "";
+  }
+  const codeDigits = digitsOnly(countryCode);
+  if (digits.startsWith(codeDigits)) {
+    return digits.slice(codeDigits.length);
+  }
+  return digits;
+}
+
+function composeWhatsappNumber(countryCode: string, localInput: string): string {
+  const localDigits = digitsOnly(localInput);
+  if (!localDigits) {
+    return "";
+  }
+  return `${countryCode}${localDigits}`;
+}
 
 export default function ProfileManager({ locale }: ProfileManagerProps) {
   const router = useRouter();
@@ -138,6 +184,14 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
   );
 
   const photoPreview = draft.photo?.dataUrl ?? draft.existingPhotoUrl;
+  const whatsappCountryCode = useMemo(
+    () => resolveWhatsappCountryCode(draft.whatsappNumber),
+    [draft.whatsappNumber],
+  );
+  const whatsappLocalNumber = useMemo(
+    () => extractWhatsappLocalNumber(draft.whatsappNumber, whatsappCountryCode),
+    [draft.whatsappNumber, whatsappCountryCode],
+  );
 
   const maxInterestCount = INTEREST_LIMIT.max;
   const maxCityCount = CITY_SELECTION_LIMIT.max;
@@ -482,23 +536,48 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
         const socialHelper = copy.fields.socialHelper?.trim() ?? "";
         return (
           <Stack spacing={0}>
-            <TextField
-              label={copy.fields.whatsappLabel}
-              value={draft.whatsappNumber}
-              placeholder={copy.fields.whatsappPlaceholder}
-              onChange={(event) => {
-                markProfileDirty();
-                updateField("whatsappNumber", event.target.value);
-              }}
-              fullWidth
-              error={showErrorsForStep && Boolean(validation.errors.whatsappNumber)}
-              inputProps={{ maxLength: WHATSAPP_NUMBER_LIMIT.max }}
-              helperText={
-                showErrorsForStep && validation.errors.whatsappNumber
-                  ? validation.errors.whatsappNumber
-                  : socialHelper || undefined
-              }
-            />
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems="flex-start">
+              <TextField
+                select
+                label={copy.fields.whatsappCountryCodeLabel}
+                value={whatsappCountryCode}
+                onChange={(event) => {
+                  markProfileDirty();
+                  const nextCountryCode = event.target.value;
+                  updateField(
+                    "whatsappNumber",
+                    composeWhatsappNumber(nextCountryCode, whatsappLocalNumber),
+                  );
+                }}
+                sx={{ minWidth: { xs: "100%", sm: 220 } }}
+              >
+                {WHATSAPP_COUNTRY_CODE_OPTIONS.map((option) => (
+                  <MenuItem key={option.code} value={option.code}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                label={copy.fields.whatsappLabel}
+                value={whatsappLocalNumber}
+                placeholder={copy.fields.whatsappPlaceholder}
+                onChange={(event) => {
+                  markProfileDirty();
+                  updateField(
+                    "whatsappNumber",
+                    composeWhatsappNumber(whatsappCountryCode, event.target.value),
+                  );
+                }}
+                fullWidth
+                error={showErrorsForStep && Boolean(validation.errors.whatsappNumber)}
+                inputProps={{ maxLength: WHATSAPP_NUMBER_LIMIT.localMax, inputMode: "numeric" }}
+                helperText={
+                  showErrorsForStep && validation.errors.whatsappNumber
+                    ? validation.errors.whatsappNumber
+                    : socialHelper || undefined
+                }
+              />
+            </Stack>
             <TextField
               label={copy.fields.linkedinLabel}
               value={draft.linkedinUrl}
@@ -514,7 +593,7 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
               helperText={
                 showErrorsForStep && validation.errors.linkedinUrl
                   ? validation.errors.linkedinUrl
-                  : socialHelper || undefined
+                  : undefined
               }
             />
             <TextField
@@ -532,7 +611,7 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
               helperText={
                 showErrorsForStep && validation.errors.instagramUrl
                   ? validation.errors.instagramUrl
-                  : socialHelper || undefined
+                  : undefined
               }
             />
           </Stack>

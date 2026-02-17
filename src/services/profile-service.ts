@@ -5,7 +5,7 @@ export type PersistedProfilePayload = {
   profile: {
     displayName: string;
     bio: string;
-    whatsappNumber?: string;
+    whatsappNumber: string;
     linkedinUrl?: string;
     instagramUrl?: string;
     photoDataUrl?: string;
@@ -35,7 +35,7 @@ export function buildProfilePayload(draft: ProfileDraft): PersistedProfilePayloa
     profile: {
       displayName: draft.displayName.trim(),
       bio: draft.bio.trim(),
-      whatsappNumber: whatsappNumber.length > 0 ? whatsappNumber : undefined,
+      whatsappNumber,
       linkedinUrl: linkedinUrl.length > 0 ? linkedinUrl : undefined,
       instagramUrl: instagramUrl.length > 0 ? instagramUrl : undefined,
       photoDataUrl: draft.photo?.dataUrl,

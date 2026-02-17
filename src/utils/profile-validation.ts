@@ -28,8 +28,7 @@ const validationMessages: Record<
   es: {
     displayName: `El nombre visible debe tener entre ${DISPLAY_NAME_LIMIT.min} y ${DISPLAY_NAME_LIMIT.max} caracteres.`,
     bio: `Comparte entre ${BIO_CHARACTER_LIMIT.min} y ${BIO_CHARACTER_LIMIT.max} caracteres para contextualizar tus matches.`,
-    whatsappNumber:
-      "Escribe un número de WhatsApp válido en formato internacional, por ejemplo +573001234567.",
+    whatsappNumber: "Ingresa tu WhatsApp con indicativo y un numero valido.",
     linkedin: `El perfil de LinkedIn debe tener máximo ${SOCIAL_LINK_LIMIT.max} caracteres.`,
     instagram: `El perfil de Instagram debe tener máximo ${SOCIAL_LINK_LIMIT.max} caracteres.`,
     photo: "Sube una foto clara para reforzar confianza.",
@@ -41,8 +40,7 @@ const validationMessages: Record<
   en: {
     displayName: `Display name must contain between ${DISPLAY_NAME_LIMIT.min} and ${DISPLAY_NAME_LIMIT.max} characters.`,
     bio: `Share between ${BIO_CHARACTER_LIMIT.min} and ${BIO_CHARACTER_LIMIT.max} characters to contextualize your matches.`,
-    whatsappNumber:
-      "Enter a valid WhatsApp number in international format, for example +573001234567.",
+    whatsappNumber: "Enter your WhatsApp with country code and a valid number.",
     linkedin: `LinkedIn profiles must be at most ${SOCIAL_LINK_LIMIT.max} characters.`,
     instagram: `Instagram profiles must be at most ${SOCIAL_LINK_LIMIT.max} characters.`,
     photo: "Upload a clear photo to build trust.",
@@ -71,12 +69,18 @@ export function validateProfileDraft(
   }
 
   const whatsappRaw = draft.whatsappNumber.trim();
-  if (whatsappRaw.length > WHATSAPP_NUMBER_LIMIT.max) {
+  if (whatsappRaw.length === 0) {
     errors.whatsappNumber = messages.whatsappNumber;
-  } else if (whatsappRaw.length > 0) {
+  } else if (whatsappRaw.length > WHATSAPP_NUMBER_LIMIT.max) {
+    errors.whatsappNumber = messages.whatsappNumber;
+  } else {
     const digitCount = whatsappRaw.replace(/\D/g, "").length;
     const validShape = /^\+?[0-9()\-\s]+$/.test(whatsappRaw);
-    if (!validShape || digitCount < 8 || digitCount > 15) {
+    if (
+      !validShape ||
+      digitCount < WHATSAPP_NUMBER_LIMIT.minDigits ||
+      digitCount > WHATSAPP_NUMBER_LIMIT.maxDigits
+    ) {
       errors.whatsappNumber = messages.whatsappNumber;
     }
   }

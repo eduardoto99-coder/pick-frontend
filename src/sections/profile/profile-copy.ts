@@ -12,6 +12,7 @@ export type ProfileCopy = {
     bioLabel: string;
     bioPlaceholder: string;
     bioCounterLabel: string;
+    whatsappCountryCodeLabel: string;
     whatsappLabel: string;
     whatsappPlaceholder: string;
     linkedinLabel: string;
@@ -102,13 +103,14 @@ const copy: Record<Locale, ProfileCopy> = {
       bioLabel: "Bio",
       bioPlaceholder: "Qué proyectos lideras, qué buscas y qué te entusiasma en esta etapa.",
       bioCounterLabel: "caracteres",
-      whatsappLabel: "WhatsApp (opcional)",
-      whatsappPlaceholder: "Ej. +573001234567",
+      whatsappCountryCodeLabel: "Indicativo",
+      whatsappLabel: "Numero de WhatsApp *",
+      whatsappPlaceholder: "Ej. 3001234567",
       linkedinLabel: "LinkedIn (opcional)",
       linkedinPlaceholder: "Ej. https://www.linkedin.com/in/tuusuario",
       instagramLabel: "Instagram (opcional)",
       instagramPlaceholder: "Ej. https://instagram.com/tuusuario",
-      socialHelper: "Si agregas tu WhatsApp, Pick puede abrir el chat directo con tu match.",
+      socialHelper: "Tu WhatsApp es obligatorio para abrir el chat directo con tus matches.",
       interestsLabel: "Buscar intereses",
       interestsPlaceholder: "Escribe para buscar o crear uno personalizado",
       citiesLabel: "Ciudades",
@@ -196,13 +198,14 @@ const copy: Record<Locale, ProfileCopy> = {
       bioLabel: "Bio",
       bioPlaceholder: "Share what you’re building, looking for, and excited about right now.",
       bioCounterLabel: "characters",
-      whatsappLabel: "WhatsApp (optional)",
-      whatsappPlaceholder: "e.g., +573001234567",
+      whatsappCountryCodeLabel: "Country code",
+      whatsappLabel: "WhatsApp number *",
+      whatsappPlaceholder: "e.g., 3001234567",
       linkedinLabel: "LinkedIn (optional)",
       linkedinPlaceholder: "e.g., https://www.linkedin.com/in/yourhandle",
       instagramLabel: "Instagram (optional)",
       instagramPlaceholder: "e.g., https://instagram.com/yourhandle",
-      socialHelper: "If you add WhatsApp, Pick can open a direct chat with your match.",
+      socialHelper: "WhatsApp is required so Pick can open direct chats with your matches.",
       interestsLabel: "Search interests",
       interestsPlaceholder: "Type to search or create a custom one",
       citiesLabel: "Cities",
