@@ -12,9 +12,10 @@ import type { Locale } from "@/i18n/types";
 
 type LandingHeaderProps = {
   locale?: string;
+  surface?: "default" | "hero";
 };
 
-export default function LandingHeader({ locale = "es" }: LandingHeaderProps) {
+export default function LandingHeader({ locale = "es", surface = "default" }: LandingHeaderProps) {
   const router = useRouter();
   const resolvedLocale = isLocale(locale) ? (locale as Locale) : defaultLocale;
   const copy: Record<
@@ -64,6 +65,7 @@ export default function LandingHeader({ locale = "es" }: LandingHeaderProps) {
       component="header"
       sx={{
         py: { xs: 3, md: 4 },
+        backgroundColor: surface === "hero" ? "#F6F2EA" : "transparent",
       }}
     >
       <Container>

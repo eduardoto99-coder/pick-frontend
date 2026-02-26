@@ -38,20 +38,35 @@ export default function HeroSection({ copy, locale }: HeroSectionProps) {
       sx={{
         position: "relative",
         overflow: "hidden",
-        background: "linear-gradient(140deg, #F5F2EB 35%, rgba(21, 148, 154, 0.12))",
+        background: "linear-gradient(160deg, #F6F2EA 0%, #F2F6F4 56%, #EEF6F6 100%)",
         py: { xs: 10, md: 16 },
       }}
     >
       <Box
         sx={{
           position: "absolute",
-          insetInlineEnd: { xs: "-40%", md: "-15%" },
-          top: { xs: "-10%", md: "auto" },
-          bottom: { xs: "auto", md: "-25%" },
-          width: { xs: "70%", md: "45%" },
-          height: { xs: "70%", md: "60%" },
-          background: "radial-gradient(circle at center, rgba(249, 140, 91, 0.35), transparent 70%)",
+          insetInlineEnd: { xs: "-38%", md: "-18%" },
+          top: { xs: "-32%", md: "-28%" },
+          width: { xs: "88%", md: "58%" },
+          height: { xs: "88%", md: "78%" },
+          background:
+            "radial-gradient(circle at center, rgba(21, 148, 154, 0.24) 0%, rgba(21, 148, 154, 0.08) 36%, rgba(21, 148, 154, 0) 72%)",
+          filter: "blur(4px)",
           zIndex: 0,
+          pointerEvents: "none",
+        }}
+      />
+      <Box
+        sx={{
+          position: "absolute",
+          insetInlineStart: { xs: "-48%", md: "-20%" },
+          bottom: { xs: "-46%", md: "-34%" },
+          width: { xs: "92%", md: "62%" },
+          height: { xs: "92%", md: "82%" },
+          background:
+            "radial-gradient(circle at center, rgba(79, 112, 125, 0.18) 0%, rgba(79, 112, 125, 0.05) 42%, rgba(79, 112, 125, 0) 76%)",
+          zIndex: 0,
+          pointerEvents: "none",
         }}
       />
       <Container sx={{ position: "relative", zIndex: 1 }}>

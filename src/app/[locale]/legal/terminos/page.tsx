@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Container, Link, Paper, Stack, Typography } from "@mui/material";
+import { Link, Paper, Stack, Typography } from "@mui/material";
 
 import ContractContent from "@/components/legal/ContractContent";
+import LegalPageShell from "@/components/legal/LegalPageShell";
 import { ACTIVE_TERMS_VERSION, buildPrivacyUrl } from "@/constants/consent";
 
 type PageProps = {
@@ -22,10 +23,10 @@ export default async function TermsAndPrivacyPage({ params }: PageProps) {
   const privacyHref = buildPrivacyUrl(locale);
 
   return (
-    <Container maxWidth="md" sx={{ py: { xs: 6, md: 10 } }} component="main" id="main-content">
-      <Stack spacing={3}>
+    <LegalPageShell locale={locale} currentSection="terminos">
+      <Stack spacing={3} component="section" aria-labelledby="terms-heading">
         <Stack spacing={1}>
-          <Typography variant="h3" fontWeight={700} letterSpacing="-0.02em">
+          <Typography id="terms-heading" variant="h3" fontWeight={700} letterSpacing="-0.02em">
             Contrato de servicio y privacidad
           </Typography>
           <Typography variant="body1" color="text.secondary">
@@ -52,6 +53,6 @@ export default async function TermsAndPrivacyPage({ params }: PageProps) {
           ¿Solo quieres leer el aviso de privacidad? <Link href={privacyHref}>Encuéntralo aquí</Link>.
         </Typography>
       </Stack>
-    </Container>
+    </LegalPageShell>
   );
 }

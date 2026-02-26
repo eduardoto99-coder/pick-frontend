@@ -19,6 +19,15 @@ type StatusState = {
 };
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const authFieldSx = {
+  "& .MuiOutlinedInput-root": {
+    borderRadius: 1.5,
+  },
+  "& .MuiOutlinedInput-input": {
+    px: 1.6,
+    py: 1.55,
+  },
+};
 
 export default function SignInForm({ locale = "es" }: { locale?: string }) {
   const [form, setForm] = useState<FormState>({ email: "", password: "" });
@@ -108,6 +117,7 @@ export default function SignInForm({ locale = "es" }: { locale?: string }) {
         onChange={handleChange("email")}
         required
         fullWidth
+        sx={authFieldSx}
       />
       <TextField
         label="Contraseña"
@@ -116,6 +126,7 @@ export default function SignInForm({ locale = "es" }: { locale?: string }) {
         onChange={handleChange("password")}
         required
         fullWidth
+        sx={authFieldSx}
       />
       <Button
         component={NextLink}

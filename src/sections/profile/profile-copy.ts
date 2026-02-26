@@ -63,6 +63,22 @@ export type ProfileCopy = {
     savingLabel: string;
     savedLabel: string;
   };
+  completion: {
+    incompleteTitle: string;
+    completeTitle: string;
+    helper: string;
+    missingSummaryLabel: string;
+    donePrefix: string;
+    pendingPrefix: string;
+    requirements: {
+      displayName: string;
+      bio: string;
+      photo: string;
+      whatsappNumber: string;
+      interests: string;
+      cities: string;
+    };
+  };
   matches: {
     title: string;
     helper: string;
@@ -154,6 +170,22 @@ const copy: Record<Locale, ProfileCopy> = {
       saveLabel: "Guardar perfil",
       savingLabel: "Guardando...",
       savedLabel: "Perfil guardado",
+  },
+  completion: {
+      incompleteTitle: "Te faltan {count} requisitos para guardar tu perfil",
+      completeTitle: "Perfil completo: ya puedes guardar",
+      helper: "Completa estos campos obligatorios para desbloquear tus matches.",
+      missingSummaryLabel: "Pendiente:",
+      donePrefix: "Listo:",
+      pendingPrefix: "Falta:",
+      requirements: {
+        displayName: "Nombre visible",
+        bio: "Bio",
+        photo: "Foto",
+        whatsappNumber: "WhatsApp",
+        interests: "Intereses",
+        cities: "Ciudades",
+      },
   },
   matches: {
     title: "Sugerencias",
@@ -249,6 +281,22 @@ const copy: Record<Locale, ProfileCopy> = {
       saveLabel: "Save profile",
       savingLabel: "Saving...",
       savedLabel: "Profile saved",
+  },
+  completion: {
+      incompleteTitle: "You still need {count} requirements before saving your profile",
+      completeTitle: "Profile complete: you can save now",
+      helper: "Complete these required fields to unlock your matches.",
+      missingSummaryLabel: "Missing:",
+      donePrefix: "Done:",
+      pendingPrefix: "Missing:",
+      requirements: {
+        displayName: "Display name",
+        bio: "Bio",
+        photo: "Photo",
+        whatsappNumber: "WhatsApp",
+        interests: "Interests",
+        cities: "Cities",
+      },
   },
   matches: {
     title: "Suggestions",

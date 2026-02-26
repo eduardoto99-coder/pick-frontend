@@ -75,7 +75,7 @@ test("open in WhatsApp targets web.whatsapp.com with a direct phone number", asy
   const password = "PickE2E123!";
   const displayName = `Pick WhatsApp ${runId}`;
   const candidatePhoneDigits = "573001112233";
-  const sharedCityId = "villavicencio";
+  const sharedCityId = "manizales";
 
   const registerResponse = await request.post(`${API_URL}/auth/register`, {
     data: {
@@ -142,8 +142,8 @@ test("open in WhatsApp targets web.whatsapp.com with a direct phone number", asy
   await page.getByRole("option", { name: new RegExp(interestLabel, "i") }).first().click();
 
   const cityInput = page.getByLabel(/Ciudades/i);
-  await cityInput.fill("Villavicencio");
-  await page.getByRole("option", { name: /Villavicencio/i }).first().click();
+  await cityInput.fill("Manizales");
+  await page.getByRole("option", { name: /Manizales/i }).first().click();
 
   await page.getByRole("button", { name: /guardar perfil/i }).click();
   await expect(page.getByText(/perfil guardado/i)).toBeVisible();

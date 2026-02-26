@@ -3,9 +3,9 @@ import type { LandingDictionary } from "../types";
 const en: LandingDictionary = {
   hero: {
     id: "home",
-    title: "Pick writes your WhatsApp intro and pairs you with someone on your wavelength.",
+    title: "Connect 1:1 in your city with people who match your plan.",
     description:
-      "Plans are always proposed in public places for safer interactions. Share the plan and city—Pick matches you, writes the intro in your tone, and opens WhatsApp ready to send so you can confirm fast.",
+      "Pick is not a dating app. It helps you build friendships, hobbies, communities, and professional connections by city and interest, with a WhatsApp intro ready to send.",
     primaryCta: {
       label: "Start your plan",
       href: "/app",
@@ -16,18 +16,18 @@ const en: LandingDictionary = {
     },
     differentiators: [
       "AI-generated intro ready in WhatsApp",
-      "Matches ready to move in any city, free and no subscription",
-      "Crossed interests and timing so you decide fast",
+      "Curated matches by city, interest, and timing",
+      "Visible safety and privacy tools",
     ],
     cardTitle: "How Pick gets you talking",
     cardPoints: [
-      "Describe the plan and city; add vibe and time.",
-      "Pick selects the right person and drafts the automatic intro in your voice.",
+      "Choose city and plan type: sports, culture, language exchange, wellness, business, and more.",
+      "Pick suggests a compatible person and drafts the automatic intro in your voice.",
       "Open WhatsApp, hit send, and lock place and time in minutes.",
     ],
     messagePreviewLabel: "Preview of the automatic message",
     messagePreview:
-      "Hey Ana, it’s Alex. Down for the rooftop in Roma Norte this Friday 8pm? I’ll book a table and share the playlist—if it works I’ll send the pin.",
+      "Hey Maya, it’s Jordan. I saw we both like photography and we are in Chicago. Want to do a street-photo walk this Saturday morning?",
   },
   journey: {
     id: "journey",
@@ -36,7 +36,8 @@ const en: LandingDictionary = {
     steps: [
       {
         title: "1. Share the plan",
-        description: "Pick the city and activity—party, sports, networking, exploring.",
+        description:
+          "Pick the city and activity: book club, bike ride, language exchange, local exploring, volunteering, or networking.",
       },
       {
         title: "2. Pick writes and opens the intro in WhatsApp",
@@ -53,49 +54,77 @@ const en: LandingDictionary = {
     id: "social-proof",
     title: "Scenarios you could live with Pick.",
     subtitle:
-      "These are not real testimonials. They are representative examples of how Pick can help by city, interest, and plan type.",
+      "Representative examples across different cities, interests, and user profiles.",
     disclaimer:
       "Hypothetical examples inspired by real product usage patterns.",
     stories: [
       {
-        title: "A local friend to discover Medellin",
+        title: "You moved to New York and want a cultural plan",
         description:
-          "With Pick, you could meet a local friend in Medellin to explore nightlife near Comuna 13 and get to know the city with someone who already lives it.",
-        context: "New city + tourism + nightlife",
+          "If you relocated for work or study, Pick can connect you with someone to explore museums, neighborhood events, or a local coffee route.",
+        context: "New city + culture + friendship",
       },
       {
-        title: "A partner for your hobby plan",
+        title: "Restart your hobby in Austin without doing it alone",
         description:
-          "With Pick, you could find someone to play soccer with after work, lock a public field, and build a weekly plan in your city.",
-        context: "Specific interest + recurring plan",
+          "You can find someone to run, ride, dance, or train after work and turn that interest into a weekly routine.",
+        context: "Wellness + sports + routine",
       },
       {
-        title: "Networking that turns into action",
+        title: "Networking beyond tech circles",
         description:
-          "With Pick, you could connect with software profiles to grab coffee, exchange ideas, and open real collaborations in the same city.",
-        context: "Networking + collaboration",
+          "From design and education to hospitality and sales, Pick helps you meet aligned profiles in your city for useful conversations and real collaboration.",
+        context: "Career + collaboration",
       },
     ],
   },
+  trust: {
+    id: "safety",
+    title: "Safety and trust are visible in every connection",
+    description: "Before, during, and after a match, you have clear controls to protect your experience.",
+    measures: [
+      {
+        title: "Report and block quickly",
+        description:
+          "If something feels off, you can report profiles and block contacts to stop interaction immediately.",
+      },
+      {
+        title: "Anti-abuse filters",
+        description:
+          "We apply checks to detect offensive language, spam, or risky behavior in profiles and suggested messages.",
+      },
+      {
+        title: "Safer meeting guidance",
+        description:
+          "We promote public places, basic identity checks, and sharing your plan with a trusted contact.",
+      },
+      {
+        title: "Responsible data handling",
+        description:
+          "We collect only what is needed to improve matching, with privacy controls and data-rights processes.",
+      },
+    ],
+    note: "Trust is not optional; it is a core design principle in Pick.",
+  },
   highlights: {
     id: "highlights",
-    title: "Why Pick speeds up one-to-one plans.",
-    description: "AI plus human touch so you get a ready-to-send WhatsApp intro.",
+    title: "Who Pick is for",
+    description: "If you want meaningful one-to-one connections by interest, Pick helps you find the right person fast.",
     items: [
       {
-        title: "Activity-led planning",
+        title: "New city, new circle",
         description:
-          "Select the vibe and city; we coordinate timing and interests to surface the right partner.",
+          "When you arrive in a city and know few people, Pick connects you with someone aligned with your plan.",
       },
       {
-        title: "Artificial intelligence that sparks conversation",
+        title: "Specific interests",
         description:
-          "Intros arrive with context and a clear first move—already ready to drop into WhatsApp—so no one is stuck saying 'hey'.",
+          "If you want to activate something specific like chess, hiking, cooking, jazz, or running, Pick helps you find that match.",
       },
       {
-        title: "Momentum that keeps rolling",
+        title: "Intentional networking",
         description:
-          "Feedback unlocks new suggestions and gentle reminders so the plan actually happens.",
+          "Connect by city, industry, and goals across fields like healthcare, education, commerce, arts, and technology.",
       },
     ],
     closingCta: {

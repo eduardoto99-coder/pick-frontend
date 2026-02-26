@@ -3,9 +3,9 @@ import type { LandingDictionary } from "../types";
 const es: LandingDictionary = {
   hero: {
     id: "inicio",
-    title: "Conecta 1:1 en tu ciudad con personas que comparten tus intereses",
+    title: "Conecta 1:1 en tu ciudad con personas afines a tus planes",
     description:
-      "Pick no es una app de citas. Es una plataforma para amigos, planes, hobbies, colaboraciones y networking: te conecta por ciudad + interés y te deja el primer mensaje listo para WhatsApp.",
+      "Pick no es una app de citas. Es una plataforma para activar amistades, hobbies, comunidad y networking por ciudad e interés, con un mensaje inicial listo para WhatsApp.",
     primaryCta: {
       label: "Crear mi perfil gratis",
       href: "/app",
@@ -17,17 +17,17 @@ const es: LandingDictionary = {
     differentiators: [
       "Pocas sugerencias, mejor curadas",
       "Mensaje inicial listo para WhatsApp",
-      "Privacidad, seguridad y patrocinio etiquetado",
+      "Herramientas visibles de seguridad y privacidad",
     ],
     cardTitle: "Así te conecta Pick en minutos",
     cardPoints: [
-      "Elige ciudad, interés y tipo de plan que quieres activar.",
-      "Pick encuentra una persona compatible y redacta un mensaje inicial claro, en tu tono.",
+      "Elige ciudad, interés y tipo de plan: deporte, cultura, idiomas, bienestar, negocios y más.",
+      "Pick sugiere una persona compatible y redacta un mensaje inicial claro en tu tono.",
       "Abres WhatsApp, editas si quieres y coordinas el plan.",
     ],
     messagePreviewLabel: "Ejemplo de mensaje automático:",
     messagePreview:
-      "Hola Juan, soy Diego. Vi que a ambos nos gusta el fútbol y estamos en Medellín. ¿Te animas a jugar un 5v5 esta semana en una cancha pública?",
+      "Hola Laura, soy Sam. Vi que a ambos nos interesa la fotografía y estamos en Bogotá. ¿Te animas a una caminata de foto callejera este sábado en la mañana?",
   },
   journey: {
     id: "journey",
@@ -37,7 +37,7 @@ const es: LandingDictionary = {
       {
         title: "1. Define ciudad + interés + objetivo",
         description:
-          "Ejemplos: jugar fútbol, plan de jazz, networking en software, turismo local, fiesta o bienestar.",
+          "Ejemplos: club de lectura, ruta en bici, intercambio de idiomas, turismo local, voluntariado o networking profesional.",
       },
       {
         title: "2. Pick sugiere y redacta el mensaje inicial",
@@ -54,48 +54,76 @@ const es: LandingDictionary = {
   socialProof: {
     id: "social-proof",
     title: "Escenarios que podrías vivir con Pick",
-    subtitle: "",
+    subtitle: "Ejemplos por ciudad, interés y perfil para mostrar la variedad de casos de uso.",
     stories: [
       {
-        title: "Tu amigo local para descubrir Medellín",
+        title: "Llegaste a Bogotá y quieres armar plan cultural",
         description:
-          "En Pick puedes conocer a tu amigo local en Medellín para ir de fiesta por la Comuna 13, conocer lugares auténticos y recorrer la ciudad con alguien que ya la vive.",
-        context: "Ciudad nueva + turismo + fiesta",
+          "Si te mudaste por estudio o trabajo, Pick puede conectarte con alguien para visitar museos, ferias o cafés de barrio y empezar a construir red local.",
+        context: "Ciudad nueva + cultura + amistad",
       },
       {
-        title: "Compañía para activar tu hobby",
+        title: "Retomar tu hobby en Cali sin empezar solo",
         description:
-          "En Pick puedes encontrar a alguien con quien jugar fútbol después del trabajo, coordinar una cancha pública y sumar un nuevo plan semanal en tu ciudad.",
-        context: "Interés puntual + plan recurrente",
+          "Puedes encontrar a una persona para salir a trotar, hacer una ruta en bici o practicar baile después del trabajo y volver ese interés parte de tu semana.",
+        context: "Bienestar + deporte + rutina",
       },
       {
-        title: "Networking que sí aterriza",
+        title: "Networking más allá de tecnología",
         description:
-          "En Pick puedes conectar con perfiles de software para tomarte un café, compartir ideas y abrir colaboraciones reales si están en la misma ciudad.",
-        context: "Networking + colaboración",
+          "Desde diseño y educación hasta gastronomía o ventas, Pick te ayuda a conectar con perfiles afines en tu ciudad para conversaciones útiles y colaboraciones reales.",
+        context: "Carrera profesional + colaboración",
       },
     ],
+  },
+  trust: {
+    id: "seguridad",
+    title: "Seguridad y confianza visibles en cada conexión",
+    description: "Antes, durante y después del match, tienes controles claros para cuidar tu experiencia.",
+    measures: [
+      {
+        title: "Reportar y bloquear en segundos",
+        description:
+          "Si algo te incomoda, puedes reportar perfiles y bloquear contactos para cortar interacción de inmediato.",
+      },
+      {
+        title: "Filtros antiabuso en contenido",
+        description:
+          "Aplicamos filtros para detectar lenguaje ofensivo, spam o comportamientos de riesgo en perfiles y mensajes sugeridos.",
+      },
+      {
+        title: "Recomendaciones de encuentro seguro",
+        description:
+          "Promovemos encuentros en lugares públicos, confirmar identidad básica y compartir tu plan con alguien de confianza.",
+      },
+      {
+        title: "Manejo responsable de tus datos",
+        description:
+          "Recopilamos lo mínimo necesario para conectar mejor, con controles de privacidad y procesos para ejercer tus derechos sobre datos.",
+      },
+    ],
+    note: "La confianza no es opcional: es parte central del diseño de Pick.",
   },
   highlights: {
     id: "destacados",
     title: "Para quién es Pick",
     description:
-      "Si buscas conexiones puntuales por interés, Pick te ayuda a encontrar a la persona correcta sin ruido.",
+      "Si buscas conexiones puntuales por interés, Pick te ayuda a encontrar a la persona correcta sin ruido ni sesgos de perfil.",
     items: [
       {
         title: "Ciudad nueva, círculo nuevo",
         description:
-          "Cuando llegas a una ciudad y no conoces a nadie, Pick te conecta con personas que comparten tu plan.",
+          "Cuando llegas a una ciudad y no conoces a nadie, Pick te conecta con personas que comparten tu plan y disponibilidad.",
       },
       {
-        title: "Interés específico",
+        title: "Intereses específicos",
         description:
-          "Si ya tienes amigos pero te falta alguien para un interés puntual (como jazz), Pick te ayuda a encontrar esa conexión.",
+          "Si quieres activar algo concreto como ajedrez, senderismo, cocina, jazz o running, Pick te ayuda a encontrar esa conexión.",
       },
       {
         title: "Networking con intención",
         description:
-          "Conecta con personas afines por industria, objetivo y ciudad para conversaciones y colaboración real.",
+          "Conecta por industria, objetivo y ciudad en sectores diversos como salud, educación, comercio, arte o tecnología.",
       },
     ],
     closingCta: {

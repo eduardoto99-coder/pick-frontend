@@ -70,6 +70,13 @@ type ProfileManagerProps = {
 };
 
 type StepId = "bio" | "photo" | "interests" | "social" | "locations";
+type CompletionRequirementId =
+  | "displayName"
+  | "bio"
+  | "photo"
+  | "whatsappNumber"
+  | "interests"
+  | "cities";
 
 type CustomInterestOption = {
   inputValue: string;
@@ -253,6 +260,68 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
   const locationsHelper = formatLimitLabel(copy.locations.helper ?? "", cityCount, maxCityCount);
   const hasSubtitle = Boolean(subtitleText);
   const hasPendingInterests = pendingInterestIds.some((id) => draft.interests.includes(id));
+  const completionRequirements = useMemo<
+    Array<{ id: CompletionRequirementId; label: string; done: boolean }>
+  >(
+    () => [
+      {
+        id: "displayName",
+        label: copy.completion.requirements.displayName,
+        done: !validation.errors.displayName,
+      },
+      {
+        id: "bio",
+        label: copy.completion.requirements.bio,
+        done: !validation.errors.bio,
+      },
+      {
+        id: "photo",
+        label: copy.completion.requirements.photo,
+        done: !validation.errors.photo,
+      },
+      {
+        id: "whatsappNumber",
+        label: copy.completion.requirements.whatsappNumber,
+        done: !validation.errors.whatsappNumber,
+      },
+      {
+        id: "interests",
+        label: copy.completion.requirements.interests,
+        done: !validation.errors.interests,
+      },
+      {
+        id: "cities",
+        label: copy.completion.requirements.cities,
+        done: !validation.errors.cities,
+      },
+    ],
+    [
+      copy.completion.requirements.displayName,
+      copy.completion.requirements.bio,
+      copy.completion.requirements.photo,
+      copy.completion.requirements.whatsappNumber,
+      copy.completion.requirements.interests,
+      copy.completion.requirements.cities,
+      validation.errors.displayName,
+      validation.errors.bio,
+      validation.errors.photo,
+      validation.errors.whatsappNumber,
+      validation.errors.interests,
+      validation.errors.cities,
+    ],
+  );
+  const missingRequirements = useMemo(
+    () => completionRequirements.filter((requirement) => !requirement.done),
+    [completionRequirements],
+  );
+  const completionTitle =
+    missingRequirements.length > 0
+      ? copy.completion.incompleteTitle.replace("{count}", `${missingRequirements.length}`)
+      : copy.completion.completeTitle;
+  const missingSummaryText =
+    missingRequirements.length > 0
+      ? `${copy.completion.missingSummaryLabel} ${missingRequirements.map((item) => item.label).join(", ")}`
+      : undefined;
   const contactedMatches = useMemo(
     () => matchRecommendations.filter((match) => Boolean(match.whatsappIntroAt)),
     [matchRecommendations],
@@ -1075,6 +1144,32 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
           </Box>
           <Box />
         </Stack>
+
+        <Alert
+          severity={missingRequirements.length > 0 ? "warning" : "success"}
+          variant="outlined"
+          data-testid="profile-completion-alert"
+        >
+          <AlertTitle>{completionTitle}</AlertTitle>
+          <Typography variant="body2">{copy.completion.helper}</Typography>
+          {missingSummaryText ? (
+            <Typography variant="body2" sx={{ mt: 0.75 }}>
+              {missingSummaryText}
+            </Typography>
+          ) : null}
+          <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mt: 1.25 }}>
+            {completionRequirements.map((requirement) => (
+              <Chip
+                key={requirement.id}
+                label={`${requirement.done ? copy.completion.donePrefix : copy.completion.pendingPrefix} ${requirement.label}`}
+                color={requirement.done ? "success" : "warning"}
+                variant={requirement.done ? "filled" : "outlined"}
+                size="small"
+                data-testid={`profile-requirement-${requirement.id}-${requirement.done ? "done" : "pending"}`}
+              />
+            ))}
+          </Stack>
+        </Alert>
 
         <Box sx={panelSx}>
           {isMdUp ? (

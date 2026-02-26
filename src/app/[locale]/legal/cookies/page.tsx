@@ -1,17 +1,27 @@
 import type { Metadata } from "next";
-import { Container, Paper, Stack, Typography } from "@mui/material";
+import { Paper, Stack, Typography } from "@mui/material";
+import LegalPageShell from "@/components/legal/LegalPageShell";
 
 export const metadata: Metadata = {
   title: "Política de cookies",
   description: "Uso de cookies y almacenamiento local en Pick.",
 };
 
-export default function CookiesPage() {
+type PageProps = {
+  params: Promise<{
+    locale: string;
+  }>;
+};
+
+export default async function CookiesPage({ params }: PageProps) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale ?? "es";
+
   return (
-    <Container maxWidth="md" sx={{ py: { xs: 6, md: 10 } }} component="main" id="main-content">
-      <Stack spacing={3}>
+    <LegalPageShell locale={locale} currentSection="cookies">
+      <Stack spacing={3} component="section" aria-labelledby="cookies-heading">
         <Stack spacing={1}>
-          <Typography variant="h3" fontWeight={700} letterSpacing="-0.02em">
+          <Typography id="cookies-heading" variant="h3" fontWeight={700} letterSpacing="-0.02em">
             Política de cookies
           </Typography>
           <Typography variant="body1" color="text.secondary">
@@ -60,6 +70,6 @@ export default function CookiesPage() {
           </Stack>
         </Paper>
       </Stack>
-    </Container>
+    </LegalPageShell>
   );
 }

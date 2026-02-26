@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import HeroSection from "@/sections/landing/HeroSection";
 import JourneySection from "@/sections/landing/JourneySection";
 import SocialProofSection from "@/sections/landing/SocialProofSection";
+import TrustSection from "@/sections/landing/TrustSection";
 import HighlightsSection from "@/sections/landing/HighlightsSection";
 import LandingHeader from "@/components/navigation/LandingHeader";
 import LandingFooter from "@/components/navigation/LandingFooter";
@@ -25,11 +26,12 @@ export default async function LandingPage() {
 
   return (
     <>
-      <LandingHeader locale={locale} />
+      <LandingHeader locale={locale} surface="hero" />
       <Box component="main" id="main-content">
         <HeroSection copy={dictionary.hero} locale={locale} />
         <JourneySection copy={dictionary.journey} />
         <SocialProofSection copy={dictionary.socialProof} />
+        <TrustSection copy={dictionary.trust} />
         <HighlightsSection copy={dictionary.highlights} locale={locale} />
       </Box>
       <LandingFooter locale={locale} />

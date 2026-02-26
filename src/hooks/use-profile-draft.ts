@@ -25,12 +25,14 @@ const draftMessages: Record<
 > = {
   es: {
     fileReadError: "No se pudo leer la imagen.",
-    validationError: "Revisa los campos marcados para completar tu perfil.",
+    validationError:
+      "Aún no pudimos guardar. Revisa los requisitos pendientes y completa los campos marcados.",
     saveError: "Tuvimos un problema guardando tu perfil.",
   },
   en: {
     fileReadError: "We couldn’t read that image file.",
-    validationError: "Check the highlighted fields to complete your profile.",
+    validationError:
+      "We still can't save your profile. Review pending requirements and complete the highlighted fields.",
     saveError: "We had an issue saving your profile.",
   },
 };
@@ -59,6 +61,7 @@ export function useProfileDraft(locale?: string) {
   );
 
   const updateField = useCallback(<K extends keyof ProfileDraft>(key: K, value: ProfileDraft[K]) => {
+    setSubmitError(undefined);
     setDraft((prev) => ({
       ...prev,
       [key]: value,
@@ -67,6 +70,7 @@ export function useProfileDraft(locale?: string) {
 
   const setPhoto = useCallback(
     async (file: File | null) => {
+      setSubmitError(undefined);
       if (!file) {
         setDraft((prev) => ({ ...prev, photo: undefined, existingPhotoUrl: undefined }));
         return;
@@ -92,12 +96,14 @@ export function useProfileDraft(locale?: string) {
         return;
       }
 
+      setSubmitError(undefined);
       setDraft((prev) => ({ ...prev, cities }));
     },
     [setDraft],
   );
 
   const toggleInterest = useCallback((id: string) => {
+    setSubmitError(undefined);
     setDraft((prev) => toggleInterestSelection(id, prev));
   }, []);
 

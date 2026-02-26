@@ -41,6 +41,17 @@ export type SocialProofCopy = {
   }>;
 };
 
+export type TrustCopy = {
+  id: string;
+  title: string;
+  description: string;
+  measures: Array<{
+    title: string;
+    description: string;
+  }>;
+  note?: string;
+};
+
 export type HighlightsCopy = {
   id: string;
   title: string;
@@ -59,5 +70,6 @@ export type LandingDictionary = {
   hero: HeroCopy;
   journey: JourneyCopy;
   socialProof: SocialProofCopy;
+  trust: TrustCopy;
   highlights: HighlightsCopy;
 };

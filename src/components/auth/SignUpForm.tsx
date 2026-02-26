@@ -5,10 +5,6 @@ import {
   Alert,
   Button,
   Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   FormControlLabel,
   Link,
   Stack,
@@ -17,10 +13,9 @@ import {
 } from "@mui/material";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import ContractContent from "@/components/legal/ContractContent";
 import {
   ACTIVE_TERMS_VERSION,
-  CONTRACT_TITLE,
+  buildContractUrl,
   buildPrivacyUrl,
 } from "@/constants/consent";
 import { registerUser } from "@/services/auth-service";
@@ -38,6 +33,15 @@ type StatusState = {
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PENDING_SIGNUP_KEY = "pick:pending-signup";
+const authFieldSx = {
+  "& .MuiOutlinedInput-root": {
+    borderRadius: 1.5,
+  },
+  "& .MuiOutlinedInput-input": {
+    px: 1.6,
+    py: 1.55,
+  },
+};
 
 export default function SignUpForm({ locale = "es" }: { locale?: string }) {
   const [form, setForm] = useState<FormState>({
@@ -49,10 +53,21 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
   const [isSubmitting, setSubmitting] = useState(false);
   const [isAdult, setIsAdult] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [showContract, setShowContract] = useState(false);
   const router = useRouter();
 
+  const termsHref = buildContractUrl(locale);
   const privacyHref = buildPrivacyUrl(locale);
+  const checkboxLabelSx = {
+    alignItems: "center",
+    gap: 0.75,
+    m: 0,
+    "& .MuiCheckbox-root": {
+      p: 0.75,
+    },
+    "& .MuiFormControlLabel-label": {
+      lineHeight: 1.5,
+    },
+  };
 
   const handleChange = (field: keyof FormState) =>
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -144,6 +159,7 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
         onChange={handleChange("displayName")}
         required
         fullWidth
+        sx={authFieldSx}
       />
       <TextField
         label="Correo electrónico"
@@ -152,6 +168,7 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
         onChange={handleChange("email")}
         required
         fullWidth
+        sx={authFieldSx}
       />
       <TextField
         label="Contraseña"
@@ -161,13 +178,10 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
         required
         fullWidth
         helperText="Mínimo 8 caracteres."
+        sx={authFieldSx}
       />
       <FormControlLabel
-        sx={{
-          alignItems: "flex-start",
-          mt: 1,
-          ".MuiCheckbox-root": { mt: 0.25 },
-        }}
+        sx={checkboxLabelSx}
         control={
           <Checkbox
             checked={isAdult}
@@ -186,11 +200,7 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
         }
       />
       <FormControlLabel
-        sx={{
-          alignItems: "flex-start",
-          mt: 1,
-          ".MuiCheckbox-root": { mt: 0.25 },
-        }}
+        sx={checkboxLabelSx}
         control={
           <Checkbox
             checked={acceptedTerms}
@@ -199,48 +209,46 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
           />
         }
         label={
-          <Typography
-            variant="body2"
-            component="span"
-            sx={{ display: "block", lineHeight: 1.5 }}
-          >
-            Autorizo el tratamiento de mis datos personales y acepto el{" "}
-            <Link
-              component="button"
-              type="button"
-              onClick={() => setShowContract(true)}
-              underline="hover"
-              sx={{
-                fontSize: "inherit",
-                lineHeight: "inherit",
-                display: "inline",
-                p: 0,
-                m: 0,
-                border: 0,
-                backgroundColor: "transparent",
-                textAlign: "left",
-                verticalAlign: "baseline",
-                fontFamily: "inherit",
-              }}
+          <Stack spacing={0.2}>
+            <Typography
+              variant="body2"
+              component="span"
+              sx={{ display: "block", lineHeight: 1.5 }}
             >
-              {CONTRACT_TITLE} (v{ACTIVE_TERMS_VERSION})
-            </Link>{" "}
-            y el{" "}
-            <Link
-              component={NextLink}
-              href={privacyHref}
-              underline="hover"
-              sx={{
-                fontSize: "inherit",
-                lineHeight: "inherit",
-                display: "inline",
-                verticalAlign: "baseline",
-              }}
-            >
-              aviso de privacidad
-            </Link>
-            .
-          </Typography>
+              Autorizo el tratamiento de mis datos personales y acepto los{" "}
+              <Link
+                component={NextLink}
+                href={termsHref}
+                underline="hover"
+                sx={{
+                  fontSize: "inherit",
+                  lineHeight: "inherit",
+                  display: "inline",
+                  verticalAlign: "baseline",
+                }}
+              >
+                términos de servicio
+              </Link>{" "}
+              y el{" "}
+              <Link
+                component={NextLink}
+                href={privacyHref}
+                underline="hover"
+                sx={{
+                  fontSize: "inherit",
+                  lineHeight: "inherit",
+                  display: "inline",
+                  verticalAlign: "baseline",
+                }}
+              >
+                aviso de privacidad
+              </Link>
+              .
+            </Typography>
+            <Typography variant="caption" color="text.secondary" component="span">
+              Versión vigente: {ACTIVE_TERMS_VERSION}
+            </Typography>
+          </Stack>
         }
       />
       {status ? <Alert severity={status.type}>{status.message}</Alert> : null}
@@ -256,22 +264,6 @@ export default function SignUpForm({ locale = "es" }: { locale?: string }) {
       >
         ¿Ya tienes cuenta? Inicia sesión
       </Button>
-
-      <Dialog
-        open={showContract}
-        onClose={() => setShowContract(false)}
-        fullWidth
-        maxWidth="md"
-        aria-labelledby="contract-dialog-title"
-      >
-        <DialogTitle id="contract-dialog-title">{CONTRACT_TITLE}</DialogTitle>
-        <DialogContent dividers sx={{ maxHeight: "70vh" }}>
-          <ContractContent />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setShowContract(false)}>Cerrar</Button>
-        </DialogActions>
-      </Dialog>
     </Stack>
   );
 }
