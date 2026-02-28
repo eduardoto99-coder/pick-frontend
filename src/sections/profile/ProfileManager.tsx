@@ -153,7 +153,9 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
     isInterestSelected,
     canSelectInterest,
     hasLoadedProfile,
-  } = useProfileDraft(locale);
+  } = useProfileDraft(locale, {
+    enableRemoteLoad: sessionReady && hasSession,
+  });
   const [attemptedSteps, setAttemptedSteps] = useState<number[]>([]);
   const [hasSavedProfile, setHasSavedProfile] = useState(false);
   const [autoMarkedFromLoad, setAutoMarkedFromLoad] = useState(false);
@@ -506,6 +508,12 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
 
   const loadInterestOptions = useCallback(
     async (query: string) => {
+      if (!sessionReady || !hasSession) {
+        setInterestStatus("idle");
+        setInterestError(undefined);
+        return;
+      }
+
       try {
         setInterestStatus("loading");
         const results = await fetchInterests(query);
@@ -517,7 +525,7 @@ export default function ProfileManager({ locale }: ProfileManagerProps) {
         setInterestError(error instanceof Error ? error.message : copy.matches.error);
       }
     },
-    [copy.matches.error],
+    [copy.matches.error, hasSession, sessionReady],
   );
 
   useEffect(() => {

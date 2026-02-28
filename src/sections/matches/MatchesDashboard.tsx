@@ -34,7 +34,7 @@ import {
   prepareWhatsAppOpen,
 } from "@/utils/whatsapp";
 import { getMatchesCopy } from "./matches-copy";
-import { isProfileMarkedComplete } from "@/utils/local-user";
+import { hasStoredAuthSession, isProfileMarkedComplete } from "@/utils/local-user";
 import {
   fetchFeedbackEligibility,
   submitFeedback,
@@ -121,7 +121,8 @@ export default function MatchesDashboard({ locale }: MatchesDashboardProps) {
     if (typeof window === "undefined") {
       return undefined;
     }
-    const syncProfile = () => setProfileComplete(isProfileMarkedComplete());
+    const syncProfile = () =>
+      setProfileComplete(isProfileMarkedComplete() && hasStoredAuthSession());
     syncProfile();
     window.addEventListener("storage", syncProfile);
     return () => window.removeEventListener("storage", syncProfile);
@@ -146,6 +147,11 @@ export default function MatchesDashboard({ locale }: MatchesDashboardProps) {
   }, [loadFeedbackEligibility, profileComplete]);
 
   useEffect(() => {
+    if (!profileComplete || !hasStoredAuthSession()) {
+      setInterestLookup({});
+      return;
+    }
+
     let isMounted = true;
     fetchInterests("")
       .then((options) => {
@@ -165,7 +171,7 @@ export default function MatchesDashboard({ locale }: MatchesDashboardProps) {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [profileComplete]);
 
   if (!profileComplete) {
     const profileHref = `/${locale ?? "es"}/profile`;

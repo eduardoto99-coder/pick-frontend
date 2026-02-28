@@ -45,6 +45,8 @@ export const WHATSAPP_NUMBER_LIMIT = {
   localMax: 15,
 };
 
+export const PROFILE_PHOTO_MAX_BYTES = 5 * 1024 * 1024;
+
 export type WhatsappCountryCodeOption = {
   code: string;
   label: string;

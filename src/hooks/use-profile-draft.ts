@@ -1,9 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { DEFAULT_PROFILE_DRAFT, CITY_SELECTION_LIMIT } from "@/constants/profile";
+import {
+  DEFAULT_PROFILE_DRAFT,
+  CITY_SELECTION_LIMIT,
+  PROFILE_PHOTO_MAX_BYTES,
+} from "@/constants/profile";
 import { defaultLocale, isLocale } from "@/i18n/config";
 import { fetchProfile, persistProfile } from "@/services/profile-service";
-import { getStoredDisplayName, persistStoredDisplayName } from "@/utils/local-user";
+import {
+  getStoredDisplayName,
+  hasStoredAuthSession,
+  persistStoredDisplayName,
+} from "@/utils/local-user";
 import {
   validateProfileDraft,
   toggleInterestSelection,
@@ -19,18 +27,21 @@ const draftMessages: Record<
   Locale,
   {
     fileReadError: string;
+    photoTooLarge: string;
     validationError: string;
     saveError: string;
   }
 > = {
   es: {
     fileReadError: "No se pudo leer la imagen.",
+    photoTooLarge: "La foto supera el límite máximo (5MB).",
     validationError:
       "Aún no pudimos guardar. Revisa los requisitos pendientes y completa los campos marcados.",
     saveError: "Tuvimos un problema guardando tu perfil.",
   },
   en: {
     fileReadError: "We couldn’t read that image file.",
+    photoTooLarge: "The photo exceeds the maximum size (5MB).",
     validationError:
       "We still can't save your profile. Review pending requirements and complete the highlighted fields.",
     saveError: "We had an issue saving your profile.",
@@ -46,7 +57,12 @@ function fileToDataUrl(file: File, errorMessage: string): Promise<string> {
   });
 }
 
-export function useProfileDraft(locale?: string) {
+type UseProfileDraftOptions = {
+  enableRemoteLoad?: boolean;
+};
+
+export function useProfileDraft(locale?: string, options?: UseProfileDraftOptions) {
+  const enableRemoteLoad = options?.enableRemoteLoad ?? true;
   const resolvedLocale = isLocale(locale) ? (locale as Locale) : defaultLocale;
   const messages = useMemo(() => draftMessages[resolvedLocale], [resolvedLocale]);
   const [draft, setDraft] = useState<ProfileDraft>(DEFAULT_PROFILE_DRAFT);
@@ -76,18 +92,29 @@ export function useProfileDraft(locale?: string) {
         return;
       }
 
-      const dataUrl = await fileToDataUrl(file, messages.fileReadError);
-      setDraft((prev) => ({
-        ...prev,
-        photo: {
-          dataUrl,
-          fileName: file.name,
-          fileSize: file.size,
-          lastModified: file.lastModified,
-        },
-      }));
+      if (file.size > PROFILE_PHOTO_MAX_BYTES) {
+        setStatus("error");
+        setSubmitError(messages.photoTooLarge);
+        return;
+      }
+
+      try {
+        const dataUrl = await fileToDataUrl(file, messages.fileReadError);
+        setDraft((prev) => ({
+          ...prev,
+          photo: {
+            dataUrl,
+            fileName: file.name,
+            fileSize: file.size,
+            lastModified: file.lastModified,
+          },
+        }));
+      } catch (error) {
+        setStatus("error");
+        setSubmitError(error instanceof Error ? error.message : messages.fileReadError);
+      }
     },
-    [messages.fileReadError, setDraft],
+    [messages.fileReadError, messages.photoTooLarge, setDraft],
   );
 
   const updateCities = useCallback(
@@ -164,6 +191,13 @@ export function useProfileDraft(locale?: string) {
   }, []);
 
   useEffect(() => {
+    if (!enableRemoteLoad) {
+      return;
+    }
+    if (typeof window !== "undefined" && !hasStoredAuthSession()) {
+      return;
+    }
+
     async function loadProfile() {
       try {
         const existing = await fetchProfile();
@@ -193,7 +227,7 @@ export function useProfileDraft(locale?: string) {
     }
 
     loadProfile();
-  }, []);
+  }, [enableRemoteLoad]);
 
   return {
     draft,
