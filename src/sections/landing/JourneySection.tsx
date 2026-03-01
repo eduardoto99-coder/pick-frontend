@@ -35,9 +35,11 @@ export default function JourneySection({ copy }: JourneySectionProps) {
             <Typography variant="h2" id={headingId}>
               {copy.title}
             </Typography>
-            <Typography variant="body1" color="text.secondary" id={descriptionId}>
-              {copy.description}
-            </Typography>
+            {copy.description ? (
+              <Typography variant="body1" color="text.secondary" id={descriptionId}>
+                {copy.description}
+              </Typography>
+            ) : null}
           </Stack>
           <Stack spacing={3}>
             {copy.steps.map((step, index) => (

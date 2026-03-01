@@ -25,14 +25,14 @@ const es: LandingDictionary = {
       "Pick sugiere una persona compatible y redacta un mensaje inicial claro en tu tono.",
       "Abres WhatsApp, editas si quieres y coordinas el plan.",
     ],
-    messagePreviewLabel: "Ejemplo de mensaje automático:",
+    messagePreviewLabel: "",
     messagePreview:
       "Hola Laura, soy Sam. Vi que a ambos nos interesa la fotografía y estamos en Bogotá. ¿Te animas a una caminata de foto callejera este sábado en la mañana?",
   },
   journey: {
     id: "journey",
     title: "Tres pasos para pasar de idea a plan real",
-    description: "Diseñado para reducir fricción y conectar con intención",
+    description: "",
     steps: [
       {
         title: "1. Define ciudad + interés + objetivo",
@@ -54,7 +54,7 @@ const es: LandingDictionary = {
   socialProof: {
     id: "social-proof",
     title: "Escenarios que podrías vivir con Pick",
-    subtitle: "Ejemplos por ciudad, interés y perfil para mostrar la variedad de casos de uso.",
+    subtitle: "",
     stories: [
       {
         title: "Llegaste a Bogotá y quieres armar plan cultural",
@@ -79,7 +79,7 @@ const es: LandingDictionary = {
   trust: {
     id: "seguridad",
     title: "Seguridad y confianza visibles en cada conexión",
-    description: "Antes, durante y después del match, tienes controles claros para cuidar tu experiencia.",
+    description: "",
     measures: [
       {
         title: "Reportar y bloquear en segundos",
@@ -107,8 +107,7 @@ const es: LandingDictionary = {
   highlights: {
     id: "destacados",
     title: "Para quién es Pick",
-    description:
-      "Si buscas conexiones puntuales por interés, Pick te ayuda a encontrar a la persona correcta sin ruido ni sesgos de perfil.",
+    description: "",
     items: [
       {
         title: "Ciudad nueva, círculo nuevo",

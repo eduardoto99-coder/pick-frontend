@@ -146,9 +146,11 @@ export default function HeroSection({ copy, locale }: HeroSectionProps) {
                     ))}
                   </Stack>
                   <Stack spacing={1.5}>
-                    <Typography variant="subtitle2" color="text.secondary">
-                      {copy.messagePreviewLabel}
-                    </Typography>
+                    {copy.messagePreviewLabel ? (
+                      <Typography variant="subtitle2" color="text.secondary">
+                        {copy.messagePreviewLabel}
+                      </Typography>
+                    ) : null}
                     <Box
                       sx={{
                         borderRadius: 2,

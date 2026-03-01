@@ -51,9 +51,11 @@ export default function HighlightsSection({ copy, locale = "es" }: HighlightsSec
             <Typography variant="h2" id={headingId}>
               {copy.title}
             </Typography>
-            <Typography variant="body1" color="text.secondary" id={descriptionId}>
-              {copy.description}
-            </Typography>
+            {copy.description ? (
+              <Typography variant="body1" color="text.secondary" id={descriptionId}>
+                {copy.description}
+              </Typography>
+            ) : null}
           </Stack>
           <Stack
             direction={{ xs: "column", md: "row" }}
